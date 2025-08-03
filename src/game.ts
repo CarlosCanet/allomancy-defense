@@ -1,6 +1,10 @@
 export enum gameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
-export enum metalResources { Steel, Bronze, Copper, Tin };
-export enum resources { metalResources, Coins }
+export const METALS_RESOURCES = ["Steel", "Bronze", "Copper", "Tin"] as const;
+export const OTHER_RESOURCES = ["Coins"] as const;
+export const RESOURCES = [...METALS_RESOURCES, ...OTHER_RESOURCES];
+export type Metal = typeof METALS_RESOURCES[number];
+export type Resource = typeof RESOURCES[number];
+
 export interface Screens{
     startScreenNode: HTMLDivElement;
     gameDefenseScreenNode: HTMLDivElement;
@@ -16,7 +20,7 @@ export class Game {
     resourcesDisplayNodes: HTMLDivElement[];
     buildingButtonNodes: HTMLDivElement[];
     alliesButtonNodes: HTMLDivElement[];
-    resources: Map<resources, number>;
+    resources: Map<Resource, number>;
     gameFrequency: number;
     tick: number;
     gameIntervalId: number;
@@ -24,13 +28,13 @@ export class Game {
     // METHODS
     constructor(screens: Screens) {
         this.state = gameStates.WaitingToStart;
-        this.screenNodes = structuredClone(screens);
+        this.screenNodes = screens;
         // TODO
         this.resourcesDisplayNodes = [document.createElement("div")];
         this.buildingButtonNodes = [document.createElement("div")];
         this.alliesButtonNodes = [document.createElement("div")];
         
-        this.resources = new Map<resources, number>;
+        this.resources = new Map<Resource, number>;
         this.gameFrequency = Math.floor(1000 / 60);
         this.tick = 0;
         this.gameIntervalId = 0;

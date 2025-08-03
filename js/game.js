@@ -5,19 +5,9 @@ export var gameStates;
     gameStates[gameStates["Incursioning"] = 2] = "Incursioning";
     gameStates[gameStates["GameOver"] = 3] = "GameOver";
 })(gameStates || (gameStates = {}));
-export var metalResources;
-(function (metalResources) {
-    metalResources[metalResources["Steel"] = 0] = "Steel";
-    metalResources[metalResources["Bronze"] = 1] = "Bronze";
-    metalResources[metalResources["Copper"] = 2] = "Copper";
-    metalResources[metalResources["Tin"] = 3] = "Tin";
-})(metalResources || (metalResources = {}));
-;
-export var resources;
-(function (resources) {
-    resources[resources["metalResources"] = 0] = "metalResources";
-    resources[resources["Coins"] = 1] = "Coins";
-})(resources || (resources = {}));
+export const METALS_RESOURCES = ["Steel", "Bronze", "Copper", "Tin"];
+export const OTHER_RESOURCES = ["Coins"];
+export const RESOURCES = [...METALS_RESOURCES, ...OTHER_RESOURCES];
 export class Game {
     // ATTRIBUTES
     state;
@@ -32,7 +22,7 @@ export class Game {
     // METHODS
     constructor(screens) {
         this.state = gameStates.WaitingToStart;
-        this.screenNodes = structuredClone(screens);
+        this.screenNodes = screens;
         // TODO
         this.resourcesDisplayNodes = [document.createElement("div")];
         this.buildingButtonNodes = [document.createElement("div")];

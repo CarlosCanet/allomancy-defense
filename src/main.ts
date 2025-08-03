@@ -1,4 +1,4 @@
-import { Game, type Screens } from "./game";
+import { Game, type Screens } from "./game.js";
 // ** GLOBAL DOM ELEMENTS ** //
 // Screens
 const startScreenNode = document.querySelector("#start-screen") as HTMLDivElement;
@@ -21,6 +21,7 @@ const startBtnNode = document.querySelector("#start-btn");
 
 // ** GLOBAL GAME VARIABLES ** //
 const allomancyGame = new Game(gameScreens);
+allomancyGame.startGame();
 
 // ** GLOBAL GAME FUNCTIONS ** //
 
