@@ -1,0 +1,87 @@
+export enum gameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
+export enum metalResources { Steel, Bronze, Copper, Tin };
+export enum resources { metalResources, Coins }
+export interface Screens{
+    startScreenNode: HTMLDivElement;
+    gameDefenseScreenNode: HTMLDivElement;
+    baseGameBoxNode: HTMLDivElement;
+    gameIncursionScreenNode: HTMLDivElement;
+    incursionGameBoxNode: HTMLDivElement;
+    gameOverScreenNode: HTMLDivElement;
+}
+export class Game { 
+    // ATTRIBUTES
+    state: gameStates;
+    screenNodes: Screens;
+    resourcesDisplayNodes: HTMLDivElement[];
+    buildingButtonNodes: HTMLDivElement[];
+    alliesButtonNodes: HTMLDivElement[];
+    resources: Map<resources, number>;
+    gameFrequency: number;
+    tick: number;
+    gameIntervalId: number;
+
+    // METHODS
+    constructor(screens: Screens) {
+        this.state = gameStates.WaitingToStart;
+        this.screenNodes = structuredClone(screens);
+        // TODO
+        this.resourcesDisplayNodes = [document.createElement("div")];
+        this.buildingButtonNodes = [document.createElement("div")];
+        this.alliesButtonNodes = [document.createElement("div")];
+        
+        this.resources = new Map<resources, number>;
+        this.gameFrequency = Math.floor(1000 / 60);
+        this.tick = 0;
+        this.gameIntervalId = 0;
+    }
+
+    startGame() {
+        this.showBaseScreen();
+        this.gameIntervalId = setInterval(this.gameLoop,this.gameFrequency)
+    }
+
+    showStartScreen() {
+        this.screenNodes.startScreenNode.style.display = "flex";
+        this.screenNodes.gameDefenseScreenNode.style.display = "none";
+        this.screenNodes.gameIncursionScreenNode.style.display = "none";
+        this.screenNodes.gameOverScreenNode.style.display = "none";
+    }
+
+    showBaseScreen() {
+        this.screenNodes.startScreenNode.style.display = "none";
+        this.screenNodes.gameDefenseScreenNode.style.display = "flex";
+        this.screenNodes.gameIncursionScreenNode.style.display = "none";
+        this.screenNodes.gameOverScreenNode.style.display = "none";
+    }
+
+    showIncursionScreen() {
+        this.screenNodes.startScreenNode.style.display = "none";
+        this.screenNodes.gameDefenseScreenNode.style.display = "none";
+        this.screenNodes.gameIncursionScreenNode.style.display = "flex";
+        this.screenNodes.gameOverScreenNode.style.display = "none";
+    }
+
+    showGameOver() {
+        this.screenNodes.startScreenNode.style.display = "none";
+        this.screenNodes.gameDefenseScreenNode.style.display = "none";
+        this.screenNodes.gameIncursionScreenNode.style.display = "none";
+        this.screenNodes.gameOverScreenNode.style.display = "flex";
+    }
+
+    gameLoop() {
+        
+    }
+
+    gameOver() {
+        
+    }
+
+    // createBuilding(building: Building) {
+        
+    // }
+
+    // recruitAlly(ally: Character) {
+        
+    // }
+}

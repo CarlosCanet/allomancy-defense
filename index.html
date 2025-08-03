@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Allomancy Defense</title>
+        <link rel="stylesheet" href="./styles/style.css">
+    </head>
+    <body>
+
+        <h1>Allomancy Defense</h1>
+        <!-- START SCREEN -->
+        <div id="start-screen" class="container">
+            <img src="https://placecats.com/500/300" width="500" alt="logo" />
+            <button id="start-btn">Start!</button>
+        </div>
+
+        <!---- GAME SCREENS ---->
+        <!-- BASE SCREEN -->
+        <div id="game-base-screen" class="container game-screen">
+            <!-- Game elements like score, lifes and other ui elements should be here (inside the game-screen but outside the game-box) -->
+            <div id="base-game-box">
+                <!-- Game elements will be added here via javascript and DOM manipulation -->
+            </div>
+        </div>
+
+        <!-- INCURSION SCREEN -->
+        <div id="game-incursion-screen" class="container game-screen">
+            <!-- Game elements like score, lifes and other ui elements should be here (inside the game-screen but outside the game-box) -->
+            <div id="incursion-game-box">
+                <!-- Game elements will be added here via javascript and DOM manipulation -->
+            </div>
+        </div>
+
+        <!-- GAME OVER SCREEN -->
+        <div id="game-over-screen" class="container">
+            <img src="" width="500" alt="logo" />
+        </div>
+        <script src="./js/main.js"></script>
+    </body>
+</html>
