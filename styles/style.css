@@ -11,22 +11,16 @@ body {
   margin: 50px;
 }
 
-#game-box {
+.game-box {
   background-color: darkgray;
+  border: solid 2px black;
   width:100%;
-  height:400px;
+  height:75vh;
 
   position: relative; /* allows us to position inner elements (absolute) related the the game-box */
   overflow: hidden; /* prevents elements to visually exit the game-box */
   user-select: none; /* prevents elements inside the game-box to be highlighted. This improves the user experience for click events on the game-box */
-}
-
-#game-box * {
   pointer-events: none; /* prevents elements in the game-box to be dragged. This improves the user experience for click events on the game-box  */
-}
-
-#game-screen, #game-over-screen {
-  display: none;
 }
 
 h1 {

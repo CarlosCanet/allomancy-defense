@@ -38,6 +38,7 @@ export class Game {
         this.gameFrequency = Math.floor(1000 / 60);
         this.tick = 0;
         this.gameIntervalId = 0;
+        this.showStartScreen();
     }
 
     startGame() {
