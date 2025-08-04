@@ -60,6 +60,7 @@ h2{
 
 ul {
   list-style: none;
+  padding: 0;
 }
 
 .menu-base-list {
@@ -67,7 +68,6 @@ ul {
   flex-direction: row;
   flex-wrap: wrap;
   li {
-    width: 20%;
     color: white;
   }
 }

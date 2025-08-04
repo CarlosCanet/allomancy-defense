@@ -8,13 +8,21 @@ class MenuSection {
         this.sectionNode = document.createElement("div");
         this.titleNode = document.createElement("h2");
         this.listNode = document.createElement("ul");
+        this.listNode.classList.add("ul-menu-list");
         this.titleNode.innerText = title;
         this.sectionNode.append(this.titleNode);
         this.sectionNode.append(this.listNode);
     }
 
-    addElement(elementText: string) {
-        this.listNode.innerHTML += `<li class="listMenu" id="${elementText}-card"> ${elementText}</li>`;
+    addElement(resourceName: string) {
+        this.listNode.innerHTML += `<li class="listMenu" id="${resourceName}-card">${resourceName} <span>0</span></li>`;
+    }
+
+    updateAmount(resourceName: string, amount: number) {
+        const liNode = document.querySelector<HTMLLIElement>(`${resourceName}-card`);
+        if (liNode) {
+            liNode.innerText = `${resourceName}<span>${amount}</span>`;            
+        }
     }
 }
 
@@ -58,5 +66,9 @@ export class GameIdle {
             this.resources.set(resource, 0);
             this.resourcesMenuSectionNode.addElement(resource);
         });
+    }
+
+    gameLoop(tick: number) {
+        
     }
 }

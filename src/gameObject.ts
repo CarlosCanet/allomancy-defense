@@ -14,6 +14,7 @@ export class GameObject {
         this.h = h;
         this.node = node;
     }
+    
     render() {
         this.node.style.top = `${this.y}px`;
         this.node.style.left = `${this.x}px`;

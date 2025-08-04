@@ -81,6 +81,7 @@ export class Game {
     gameLoop() {
         this.tick++;
         // Every building produce resource
+        this.gameIdle.gameLoop(this.tick)
     }
 
     gameOver() {
