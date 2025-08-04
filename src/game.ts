@@ -3,11 +3,13 @@ import { GameIncursion } from "./gameIncursion.js";
 import { HouseVenture } from "./houses.js";
 
 export enum gameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
-export const METALS_RESOURCES = ["Steel", "Bronze", "Copper", "Tin"] as const;
-export const OTHER_RESOURCES = ["Coins"] as const;
-export const RESOURCES = [...METALS_RESOURCES, ...OTHER_RESOURCES];
-export type Metal = typeof METALS_RESOURCES[number];
+export const METALS_RESOURCES = {STEEL: "Steel", BRONZE: "Bronze", COPPER: "Copper", TIN: "Tin"} as const;
+export const OTHER_RESOURCES = { COINS: "Coins" } as const;
+export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES } as const;
+// export const RESOURCES = [...Object.values(METALS_RESOURCES), ...Object.values(OTHER_RESOURCES)];
+export const RESOURCES = [...Object.values(ALL_RESOURCES)];
 export type Resource = typeof RESOURCES[number];
+export type Metal = typeof METALS_RESOURCES[keyof typeof METALS_RESOURCES];
 export const HOUSES = ["Venture", "Cett", "Lekal", "Hastings", "Elariel"];
 
 export interface Screens{

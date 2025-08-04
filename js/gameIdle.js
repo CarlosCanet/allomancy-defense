@@ -49,7 +49,7 @@ export class GameIdle {
         this.buildingsMenuSectionNode = new MenuSection("Buildings");
         this.alliesMenuSectionNode = new MenuSection("Allies");
         this.gameFrequency = gameFrequency;
-        this.resources = new Map;
+        this.resources = new Map();
         this.buildings = [];
     }
     createBaseUI = () => {
@@ -83,7 +83,7 @@ export class GameIdle {
     addBuilding = (HouseSubclass) => {
         if (this.buildings.length < 16) {
             const newBuilding = new HouseSubclass(document.createElement("div"));
-            newBuilding.node.innerHTML = `<p>${HouseSubclass.houseName}</p><br><p>${newBuilding.resource}</p>`;
+            newBuilding.node.innerHTML = `<p>${HouseSubclass.houseName}</p><br><p>${HouseSubclass.howManyBuildings} ${newBuilding.resource}</p>`;
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
         }

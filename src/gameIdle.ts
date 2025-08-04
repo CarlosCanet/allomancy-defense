@@ -2,6 +2,8 @@ import { Building } from "./building.js";
 import { METALS_RESOURCES, RESOURCES, type Resource } from "./game.js";
 import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture, type HouseConstructor } from "./houses.js";
 
+export type ResourceMap = Map<Resource, number>;
+
 class MenuSection {
     sectionNode: HTMLDivElement;
     titleNode: HTMLHeadElement;
@@ -39,7 +41,7 @@ export class GameIdle {
     buildingsMenuSectionNode: MenuSection;
     alliesMenuSectionNode: MenuSection;
     gameFrequency: number;
-    resources: Map<Resource, number>;
+    resources: ResourceMap;
     buildings: Array<Building>;
     
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
@@ -56,7 +58,7 @@ export class GameIdle {
         this.alliesMenuSectionNode = new MenuSection("Allies");
 
         this.gameFrequency = gameFrequency;
-        this.resources = new Map<Resource, number>;
+        this.resources = new Map();
         this.buildings = [];
     }
 
@@ -93,7 +95,7 @@ export class GameIdle {
     addBuilding = (HouseSubclass: HouseConstructor): void => {
         if (this.buildings.length < 16) {
             const newBuilding = new HouseSubclass(document.createElement("div"));
-            newBuilding.node.innerHTML = `<p>${HouseSubclass.houseName}</p><br><p>${newBuilding.resource}</p>`;            
+            newBuilding.node.innerHTML = `<p>${HouseSubclass.houseName}</p><br><p>${HouseSubclass.howManyBuildings} ${newBuilding.resource}</p>`;            
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
         }

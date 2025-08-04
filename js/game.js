@@ -8,9 +8,11 @@ export var gameStates;
     gameStates[gameStates["Incursioning"] = 2] = "Incursioning";
     gameStates[gameStates["GameOver"] = 3] = "GameOver";
 })(gameStates || (gameStates = {}));
-export const METALS_RESOURCES = ["Steel", "Bronze", "Copper", "Tin"];
-export const OTHER_RESOURCES = ["Coins"];
-export const RESOURCES = [...METALS_RESOURCES, ...OTHER_RESOURCES];
+export const METALS_RESOURCES = { STEEL: "Steel", BRONZE: "Bronze", COPPER: "Copper", TIN: "Tin" };
+export const OTHER_RESOURCES = { COINS: "Coins" };
+export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES };
+// export const RESOURCES = [...Object.values(METALS_RESOURCES), ...Object.values(OTHER_RESOURCES)];
+export const RESOURCES = [...Object.values(ALL_RESOURCES)];
 export const HOUSES = ["Venture", "Cett", "Lekal", "Hastings", "Elariel"];
 export class Game {
     // ATTRIBUTES
