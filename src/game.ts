@@ -1,9 +1,13 @@
+import { GameIdle } from "./gameIdle.js";
+import { GameIncursion } from "./gameIncursion.js";
+
 export enum gameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
 export const METALS_RESOURCES = ["Steel", "Bronze", "Copper", "Tin"] as const;
 export const OTHER_RESOURCES = ["Coins"] as const;
 export const RESOURCES = [...METALS_RESOURCES, ...OTHER_RESOURCES];
 export type Metal = typeof METALS_RESOURCES[number];
 export type Resource = typeof RESOURCES[number];
+export const HOUSES = ["Venture", "Cett", "Lekal", "Hastings", "Elariel"];
 
 export interface Screens{
     startScreenNode: HTMLDivElement;
@@ -13,35 +17,35 @@ export interface Screens{
     incursionGameBoxNode: HTMLDivElement;
     gameOverScreenNode: HTMLDivElement;
 }
+
 export class Game { 
     // ATTRIBUTES
     state: gameStates;
     screenNodes: Screens;
-    resourcesDisplayNodes: HTMLDivElement[];
-    buildingButtonNodes: HTMLDivElement[];
-    alliesButtonNodes: HTMLDivElement[];
-    resources: Map<Resource, number>;
     gameFrequency: number;
     tick: number;
     gameIntervalId: number;
+    gameIdle: GameIdle;
+    gameIncursion: GameIncursion;
 
     // METHODS
     constructor(screens: Screens) {
         this.state = gameStates.WaitingToStart;
         this.screenNodes = screens;
-        // TODO
-        this.resourcesDisplayNodes = [document.createElement("div")];
-        this.buildingButtonNodes = [document.createElement("div")];
-        this.alliesButtonNodes = [document.createElement("div")];
         
-        this.resources = new Map<Resource, number>;
         this.gameFrequency = Math.floor(1000 / 60);
         this.tick = 0;
         this.gameIntervalId = 0;
         this.showStartScreen();
+
+        this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode);
+        this.gameIncursion = new GameIncursion();
     }
 
+
+
     startGame() {
+        this.gameIdle.createBaseUI();
         this.showBaseScreen();
         this.gameIntervalId = setInterval(this.gameLoop,this.gameFrequency)
     }
@@ -75,7 +79,8 @@ export class Game {
     }
 
     gameLoop() {
-        
+        this.tick++;
+        // Every building produce resource
     }
 
     gameOver() {
