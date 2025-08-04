@@ -1,4 +1,4 @@
-import { Bulding } from "./building.js";
+import { Building } from "./building.js";
 import { METALS_RESOURCES, RESOURCES } from "./game.js";
 class MenuSection {
     sectionNode;
@@ -9,6 +9,7 @@ class MenuSection {
         this.titleNode = document.createElement("h2");
         this.listNode = document.createElement("ul");
         this.listNode.classList.add("ul-menu-list");
+        this.listNode.id = `${title}-ul`;
         this.titleNode.innerText = title;
         this.sectionNode.append(this.titleNode);
         this.sectionNode.append(this.listNode);
@@ -64,7 +65,7 @@ export class GameIdle {
         });
     };
     addBuilding = () => {
-        // this.buildings.push(new Bulding(0, 0, 0, 0, new HTMLDivElement, "Venture", METALS_RESOURCES[0], 0, 3));
+        this.buildings.push(new Building(0, 0, 0, 0, document.querySelector("div"), "Venture", METALS_RESOURCES[0], 0, 3));
     };
     gameLoop = (tick) => {
         // console.log(`Hola`);

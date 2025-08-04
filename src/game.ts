@@ -46,6 +46,22 @@ export class Game {
 
     startGame = () => {
         this.gameIdle.createBaseUI();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
+        this.gameIdle.addBuilding();
         this.showBaseScreen();
         this.gameIntervalId = setInterval(this.gameLoop,this.gameFrequency)
     }
