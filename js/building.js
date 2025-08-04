@@ -3,6 +3,7 @@ export class Building extends GameObject {
     resource;
     amountRate;
     periodInSec;
+    name;
     static myId = 0;
     constructor(x, y, w, h, node, name, resource, amountRate, periodInSec) {
         super(x, y, w, h, node);
@@ -10,6 +11,7 @@ export class Building extends GameObject {
         this.resource = resource;
         this.amountRate = amountRate;
         this.periodInSec = periodInSec;
+        this.name = name;
         Building.myId++;
     }
     render = () => {

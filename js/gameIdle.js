@@ -1,5 +1,6 @@
 import { Building } from "./building.js";
 import { METALS_RESOURCES, RESOURCES } from "./game.js";
+import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture } from "./houses.js";
 class MenuSection {
     sectionNode;
     titleNode;
@@ -63,6 +64,15 @@ export class GameIdle {
             this.resources.set(resource, 0);
             this.resourcesMenuSectionNode.addElement(resource);
         });
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseVenture);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseCett);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseLekal);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseHasting);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseElariel);
+    };
+    addBuildingButton = (HouseClass) => {
+        return `<li class="listMenu" id="${HouseClass.houseName}-building-btn">${HouseClass.houseName} <span>${HouseClass.howManyBuildings}</span></li>`;
+        ;
     };
     addBuilding = () => {
         this.buildings.push(new Building(0, 0, 0, 0, document.querySelector("div"), "Venture", METALS_RESOURCES[0], 0, 3));

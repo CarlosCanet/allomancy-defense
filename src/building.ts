@@ -4,6 +4,7 @@ export class Building extends GameObject {
     resource: Resource;
     amountRate: number;
     periodInSec: number;
+    name: string;
     static myId: number = 0;
     constructor(x: number, y: number, w: number, h: number, node: HTMLDivElement, name: string, resource: Resource, amountRate: number, periodInSec: number) {
         super(x, y, w, h, node);
@@ -11,6 +12,7 @@ export class Building extends GameObject {
         this.resource = resource;
         this.amountRate = amountRate;
         this.periodInSec = periodInSec;
+        this.name = name;
         Building.myId++;
     }
 

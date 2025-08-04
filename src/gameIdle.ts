@@ -1,5 +1,6 @@
 import { Building } from "./building.js";
 import { METALS_RESOURCES, RESOURCES, type Resource } from "./game.js";
+import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture } from "./houses.js";
 
 class MenuSection {
     sectionNode: HTMLDivElement;
@@ -56,7 +57,7 @@ export class GameIdle {
         this.buildings = [];
     }
 
-    createBaseUI = () =>  {
+    createBaseUI = (): void =>  {
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
         const h2Node = document.createElement("h2");
@@ -70,13 +71,22 @@ export class GameIdle {
             this.resources.set(resource, 0);
             this.resourcesMenuSectionNode.addElement(resource);
         });
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseVenture);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseCett);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseLekal);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseHasting);
+        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseElariel);
     }
 
-    addBuilding = () => {
+    addBuildingButton = (HouseClass: { houseName: string, howManyBuildings: number}): string => {
+        return `<li class="listMenu" id="${HouseClass.houseName}-building-btn">${HouseClass.houseName} <span>${HouseClass.howManyBuildings}</span></li>`;;
+    }
+
+    addBuilding = (): void => {
         this.buildings.push(new Building(0, 0, 0, 0, document.querySelector<HTMLDivElement>("div") as HTMLDivElement, "Venture", METALS_RESOURCES[0], 0, 3));
     }
 
-    gameLoop = (tick: number):void => {
+    gameLoop = (tick: number): void => {
         // console.log(`Hola`);
     }
 }
