@@ -21,7 +21,7 @@ body {
   position: relative; /* allows us to position inner elements (absolute) related the the game-box */
   overflow: hidden; /* prevents elements to visually exit the game-box */
   user-select: none; /* prevents elements inside the game-box to be highlighted. This improves the user experience for click events on the game-box */
-  pointer-events: none; /* prevents elements in the game-box to be dragged. This improves the user experience for click events on the game-box  */
+  /* pointer-events: none; prevents elements in the game-box to be dragged. This improves the user experience for click events on the game-box  */
 }
 
 h1 {
@@ -38,7 +38,7 @@ h1 {
 #menu-base {
   background-color: maroon;
   display: flex;
-  direction: column;
+  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   width: 20%;
@@ -74,4 +74,11 @@ ul {
   li {
     color: white;
   }
+}
+
+.house-building {
+  border: solid 2px red;
+  border-radius: 3px;
+  height: 20%;
+  width: 20%;
 }

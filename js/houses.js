@@ -6,13 +6,14 @@ export class House extends Building {
     constructor(x, y, w, h, node, name, resource, amountRate, periodInSec) {
         super(x, y, w, h, node, name, resource, amountRate, periodInSec);
         House.howManyBuildings++;
+        node.classList.add("house-building");
     }
 }
 export class HouseVenture extends House {
     static houseName = "House Venture";
     static howManyBuildings = 0;
     constructor(node) {
-        super(0, 0, 0, 0, node, `House Venture Building`, METALS_RESOURCES[0], 0, 1);
+        super(0, 0, 0, 0, node, `House Venture Building`, METALS_RESOURCES[0], 0, 2);
     }
 }
 export class HouseCett extends House {

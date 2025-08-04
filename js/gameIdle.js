@@ -21,7 +21,7 @@ class MenuSection {
     updateAmount(resourceName, amount) {
         const liNode = document.querySelector(`#${resourceName}-card`);
         if (liNode) {
-            liNode.innerText = `${resourceName}<span>${amount}</span>`;
+            liNode.innerHTML = `${resourceName} <span>${amount}</span>`;
         }
     }
 }
@@ -33,9 +33,10 @@ export class GameIdle {
     resourcesMenuSectionNode;
     buildingsMenuSectionNode;
     alliesMenuSectionNode;
+    gameFrequency;
     resources;
     buildings;
-    constructor(gameBoxNode) {
+    constructor(gameBoxNode, gameFrequency) {
         this.gameBoxNode = gameBoxNode;
         this.menuNode = document.createElement("div");
         this.menuNode.classList.add("menu");
@@ -47,6 +48,7 @@ export class GameIdle {
         this.resourcesMenuSectionNode = new MenuSection("Resources");
         this.buildingsMenuSectionNode = new MenuSection("Buildings");
         this.alliesMenuSectionNode = new MenuSection("Allies");
+        this.gameFrequency = gameFrequency;
         this.resources = new Map;
         this.buildings = [];
     }
@@ -64,20 +66,45 @@ export class GameIdle {
             this.resources.set(resource, 0);
             this.resourcesMenuSectionNode.addElement(resource);
         });
-        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseVenture);
-        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseCett);
-        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseLekal);
-        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseHasting);
-        this.buildingsMenuSectionNode.listNode.innerHTML += this.addBuildingButton(HouseElariel);
+        this.addBuildingButton(HouseVenture);
+        this.addBuildingButton(HouseCett);
+        this.addBuildingButton(HouseLekal);
+        this.addBuildingButton(HouseHasting);
+        this.addBuildingButton(HouseElariel);
     };
     addBuildingButton = (HouseClass) => {
-        return `<li class="listMenu" id="${HouseClass.houseName}-building-btn">${HouseClass.houseName} <span>${HouseClass.howManyBuildings}</span></li>`;
-        ;
+        const newLiNode = document.createElement("li");
+        newLiNode.classList.add("listMenu");
+        newLiNode.id = `${HouseClass.houseName}-building-btn`;
+        newLiNode.innerHTML = `${HouseClass.houseName} <span>${HouseClass.howManyBuildings}</span>`;
+        newLiNode.addEventListener("click", () => this.addBuilding(HouseClass));
+        this.buildingsMenuSectionNode.listNode.append(newLiNode);
     };
-    addBuilding = () => {
-        this.buildings.push(new Building(0, 0, 0, 0, document.querySelector("div"), "Venture", METALS_RESOURCES[0], 0, 3));
+    addBuilding = (HouseSubclass) => {
+        if (this.buildings.length < 16) {
+            const newBuilding = new HouseSubclass(document.createElement("div"));
+            newBuilding.node.innerHTML = `<p>${HouseSubclass.houseName}</p><br><p>${newBuilding.resource}</p>`;
+            this.buildings.push(newBuilding);
+            this.baseNode.append(newBuilding.node);
+        }
+    };
+    updateResourcesMenu = () => {
+        for (const resource of RESOURCES) {
+            const value = this.resources.get(resource);
+            if (value !== undefined) {
+                this.resourcesMenuSectionNode.updateAmount(resource, value);
+            }
+        }
     };
     gameLoop = (tick) => {
-        // console.log(`Hola`);
+        this.buildings.forEach(house => {
+            if (tick % ((1000 / this.gameFrequency) * house.periodInSec) === 0) {
+                let amount = this.resources.get(house.resource);
+                if (amount !== undefined) {
+                    this.resources.set(house.resource, amount + 1);
+                }
+            }
+        });
+        this.updateResourcesMenu();
     };
 }

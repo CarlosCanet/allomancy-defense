@@ -1,12 +1,19 @@
 import { Building } from "./building.js"
 import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES, type Resource } from "./game.js";
 
+export interface HouseConstructor {
+    new(...args: any[]): House;
+    houseName: string;
+    howManyBuildings: number;
+}
+
 export class House extends Building{
     static houseName: string;
     static howManyBuildings: number;
     constructor(x: number, y: number, w: number, h: number, node: HTMLDivElement, name: string, resource: Resource, amountRate: number, periodInSec: number) {
         super(x, y, w, h, node, name, resource, amountRate, periodInSec);
         House.howManyBuildings++;
+        node.classList.add("house-building");
     }
 }
 
@@ -14,7 +21,7 @@ export class HouseVenture extends House {
     static houseName = "House Venture";
     static howManyBuildings: number = 0;
     constructor(node: HTMLDivElement) {
-        super(0, 0, 0, 0, node, `House Venture Building`, METALS_RESOURCES[0], 0, 1);
+        super(0, 0, 0, 0, node, `House Venture Building`, METALS_RESOURCES[0], 0, 2);
     }
 }
 

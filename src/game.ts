@@ -1,5 +1,6 @@
 import { GameIdle } from "./gameIdle.js";
 import { GameIncursion } from "./gameIncursion.js";
+import { HouseVenture } from "./houses.js";
 
 export enum gameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
 export const METALS_RESOURCES = ["Steel", "Bronze", "Copper", "Tin"] as const;
@@ -38,7 +39,7 @@ export class Game {
         this.gameIntervalId = 0;
         this.showStartScreen();
 
-        this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode);
+        this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
         this.gameIncursion = new GameIncursion();
     }
 
@@ -46,22 +47,22 @@ export class Game {
 
     startGame = () => {
         this.gameIdle.createBaseUI();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
-        this.gameIdle.addBuilding();
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
+        // this.gameIdle.addBuilding(HouseVenture);
         this.showBaseScreen();
         this.gameIntervalId = setInterval(this.gameLoop,this.gameFrequency)
     }
