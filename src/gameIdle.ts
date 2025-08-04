@@ -1,3 +1,4 @@
+import { Bulding } from "./building.js";
 import { METALS_RESOURCES, RESOURCES, type Resource } from "./game.js";
 
 class MenuSection {
@@ -19,7 +20,7 @@ class MenuSection {
     }
 
     updateAmount(resourceName: string, amount: number) {
-        const liNode = document.querySelector<HTMLLIElement>(`${resourceName}-card`);
+        const liNode = document.querySelector<HTMLLIElement>(`#${resourceName}-card`);
         if (liNode) {
             liNode.innerText = `${resourceName}<span>${amount}</span>`;            
         }
@@ -35,6 +36,7 @@ export class GameIdle {
     buildingsMenuSectionNode: MenuSection;
     alliesMenuSectionNode: MenuSection;
     resources: Map<Resource, number>;
+    buildings: Array<Bulding>;
     
     constructor(gameBoxNode: HTMLDivElement) {
         this.gameBoxNode = gameBoxNode;
@@ -50,9 +52,10 @@ export class GameIdle {
         this.alliesMenuSectionNode = new MenuSection("Allies");
 
         this.resources = new Map<Resource, number>;
+        this.buildings = [];
     }
 
-    createBaseUI() {
+    createBaseUI = () =>  {
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
         const h2Node = document.createElement("h2");
@@ -68,7 +71,11 @@ export class GameIdle {
         });
     }
 
-    gameLoop(tick: number) {
-        
+    addBuilding = () => {
+        // this.buildings.push(new Bulding(0, 0, 0, 0, new HTMLDivElement, "Venture", METALS_RESOURCES[0], 0, 3));
+    }
+
+    gameLoop = (tick: number):void => {
+        // console.log(`Hola`);
     }
 }

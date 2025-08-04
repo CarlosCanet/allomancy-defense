@@ -31,40 +31,42 @@ export class Game {
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode);
         this.gameIncursion = new GameIncursion();
     }
-    startGame() {
+    startGame = () => {
         this.gameIdle.createBaseUI();
         this.showBaseScreen();
         this.gameIntervalId = setInterval(this.gameLoop, this.gameFrequency);
-    }
-    showStartScreen() {
+    };
+    showStartScreen = () => {
         this.screenNodes.startScreenNode.style.display = "flex";
         this.screenNodes.gameDefenseScreenNode.style.display = "none";
         this.screenNodes.gameIncursionScreenNode.style.display = "none";
         this.screenNodes.gameOverScreenNode.style.display = "none";
-    }
-    showBaseScreen() {
+    };
+    showBaseScreen = () => {
         this.screenNodes.startScreenNode.style.display = "none";
         this.screenNodes.gameDefenseScreenNode.style.display = "flex";
         this.screenNodes.gameIncursionScreenNode.style.display = "none";
         this.screenNodes.gameOverScreenNode.style.display = "none";
-    }
-    showIncursionScreen() {
+    };
+    showIncursionScreen = () => {
         this.screenNodes.startScreenNode.style.display = "none";
         this.screenNodes.gameDefenseScreenNode.style.display = "none";
         this.screenNodes.gameIncursionScreenNode.style.display = "flex";
         this.screenNodes.gameOverScreenNode.style.display = "none";
-    }
-    showGameOver() {
+    };
+    showGameOver = () => {
         this.screenNodes.startScreenNode.style.display = "none";
         this.screenNodes.gameDefenseScreenNode.style.display = "none";
         this.screenNodes.gameIncursionScreenNode.style.display = "none";
         this.screenNodes.gameOverScreenNode.style.display = "flex";
-    }
-    gameLoop() {
+    };
+    gameLoop = () => {
         this.tick++;
+        // console.log(this);
         // Every building produce resource
         this.gameIdle.gameLoop(this.tick);
-    }
-    gameOver() {
-    }
+        // this.gameIdle.gameLoop(this.tick);
+    };
+    gameOver = () => {
+    };
 }
