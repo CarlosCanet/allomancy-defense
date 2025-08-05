@@ -91,7 +91,7 @@ export class Game {
         // console.log(this);
         // Every building produce resource
         this.gameIdle.gameLoop(this.tick);
-        // this.gameIdle.gameLoop(this.tick);
+        this.gameIncursion.gameLoop(this.tick);
     }
 
     gameOver = () => {

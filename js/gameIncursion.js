@@ -1,4 +1,5 @@
 import { Building } from "./building.js";
+import { Character } from "./character.js";
 import { METALS_RESOURCES, RESOURCES } from "./game.js";
 import { MenuSection } from "./gameIdle.js";
 import { House } from "./houses.js";
@@ -13,6 +14,7 @@ export class GameIncursion {
     resources;
     buildings;
     producerAreas;
+    playerCharacter;
     constructor(gameBoxNode, gameFrequency, resources) {
         this.gameBoxNode = gameBoxNode;
         this.menuNode = document.createElement("div");
@@ -29,6 +31,11 @@ export class GameIncursion {
         this.resources = resources;
         this.buildings = [];
         this.producerAreas = [];
+        this.playerCharacter = new Character(30, 40, 50, 50, document.createElement("div"), gameBoxNode, 5, 5, true);
+        this.playerCharacter.node.id = "player-character";
+        this.playerCharacter.node.innerText = "PLAYER";
+        this.baseNode.append(this.playerCharacter.node);
+        this.playerCharacter.render();
     }
     createIncursionUI = () => {
         this.gameBoxNode.append(this.menuNode);
@@ -88,5 +95,6 @@ export class GameIncursion {
         }, this.randomIntegerRange(10000, 5000));
     };
     gameLoop = (tick) => {
+        this.playerCharacter.render();
     };
 }
