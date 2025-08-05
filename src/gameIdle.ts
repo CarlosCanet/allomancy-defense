@@ -1,5 +1,5 @@
 import { Building } from "./building.js";
-import { METALS_RESOURCES, RESOURCES, type Resource } from "./game.js";
+import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES, type Resource } from "./game.js";
 import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture, type HouseConstructor } from "./houses.js";
 
 export type ResourceMap = Map<Resource, number>;
@@ -20,14 +20,21 @@ class MenuSection {
         this.sectionNode.append(this.listNode);
     }
 
-    addElement(resourceName: string) {
-        this.listNode.innerHTML += `<li class="listMenu" id="${resourceName}-card">${resourceName} <span>0</span></li>`;
+    addElement = (elementId: string, elementText: string, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
+        const newLiNode = document.createElement("li");
+        newLiNode.classList.add("listMenu");
+        newLiNode.id = `${elementId}-btn`;
+        newLiNode.innerHTML = `${elementText} <span>0</span>`;
+        if (event && eventHandler) {
+            newLiNode.addEventListener(event, eventHandler);  
+        }
+        this.listNode.append(newLiNode);
     }
 
-    updateAmount(resourceName: string, amount: number) {
-        const liNode = document.querySelector<HTMLLIElement>(`#${resourceName}-card`);
+    updateAmount = (elementName: string, amount: number) => {
+        const liNode = this.sectionNode.querySelector<HTMLLIElement>(`#${elementName}-btn span`);
         if (liNode) {
-            liNode.innerHTML = `${resourceName} <span>${amount}</span>`;            
+            liNode.innerText = `${amount}`;            
         }
     }
 }
@@ -74,7 +81,7 @@ export class GameIdle {
         this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);
         RESOURCES.forEach((resource) => {
             this.resources.set(resource, 0);
-            this.resourcesMenuSectionNode.addElement(resource);
+            this.resourcesMenuSectionNode.addElement(resource, resource);
         });
         this.addBuildingButton(HouseVenture);
         this.addBuildingButton(HouseCett);
@@ -84,12 +91,7 @@ export class GameIdle {
     }
 
     addBuildingButton = (HouseClass: HouseConstructor): void => {
-        const newLiNode = document.createElement("li");
-        newLiNode.classList.add("listMenu");
-        newLiNode.id = `${HouseClass.houseName}-building-btn`;
-        newLiNode.innerHTML = `${HouseClass.houseName} <span>${HouseClass.howManyBuildings}</span>`;
-        newLiNode.addEventListener("click", () => this.addBuilding(HouseClass));
-        this.buildingsMenuSectionNode.listNode.append(newLiNode);
+        this.buildingsMenuSectionNode.addElement(HouseClass.houseName.replaceAll(" ", "-"), HouseClass.houseName, "click", () => this.addBuilding(HouseClass));
     }
 
     addBuilding = (HouseSubclass: HouseConstructor): void => {
@@ -98,6 +100,7 @@ export class GameIdle {
             newBuilding.node.innerHTML = `<p>${HouseSubclass.houseName}</p><br><p>${HouseSubclass.howManyBuildings} ${newBuilding.resource}</p>`;            
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
+            this.buildingsMenuSectionNode.updateAmount(`${HouseSubclass.houseName.replace(" ", "-")}`, HouseSubclass.howManyBuildings);
         }
     }
 
@@ -110,15 +113,23 @@ export class GameIdle {
         }
     }
 
+    hasPassedAPeriod = (tick: number, periodInSec: number): boolean => {
+        return (tick % ((1000 / this.gameFrequency) * periodInSec) === 0);
+    }
+
     gameLoop = (tick: number): void => {
         this.buildings.forEach(house => {
-            if (tick % ((1000 / this.gameFrequency) * house.periodInSec) === 0) {
+            if (this.hasPassedAPeriod(tick, house.periodInSec)) {
                 let amount = this.resources.get(house.resource);
                 if (amount !== undefined) {
                     this.resources.set(house.resource, amount+1);
                 }
             }
         })
+
+        if (this.hasPassedAPeriod(tick, 2)) {
+            this.resources.set(OTHER_RESOURCES.COINS, this.resources.get(OTHER_RESOURCES.COINS)! + 1);            
+        }
         this.updateResourcesMenu();
     }
 }

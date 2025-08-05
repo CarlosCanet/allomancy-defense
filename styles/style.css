@@ -78,7 +78,8 @@ ul {
 
 .house-building {
   border: solid 2px red;
-  border-radius: 3px;
-  height: 20%;
-  width: 20%;
+  border-radius: 20px;
+  height: 14%;
+  width: 15%;
+  padding: 20px;
 }
