@@ -38,3 +38,13 @@
 .static-buildings {
   position: absolute;
 }
+
+
+.area-producer {
+  position: absolute;
+  border: solid 3px red;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+  font-weight: 800;
+}
