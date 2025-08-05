@@ -32,6 +32,7 @@
     flex-wrap: wrap;
     padding: 10px;
     gap: 20px;
+    color: white;
 }
 
 .static-buildings {
@@ -42,7 +43,7 @@
 .area-producer {
   position: absolute;
   border: solid 3px red;
-  border-radius: 50%;
+  border-radius: 40%;
   text-align: center;
   color: white;
   font-weight: 800;
@@ -55,4 +56,11 @@
   color: white;
   font-size: 0.6em;
   z-index: 1;
+}
+
+.enemy {
+  position: absolute;
+  background-color: red;
+  border-radius: 50%;
+  text-align: center;
 }

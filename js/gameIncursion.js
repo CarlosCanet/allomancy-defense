@@ -1,5 +1,6 @@
 import { Building } from "./building.js";
 import { Character } from "./character.js";
+import { Enemy } from "./enemy.js";
 import { METALS_RESOURCES, RESOURCES } from "./game.js";
 import { MenuSection } from "./gameIdle.js";
 import { House } from "./houses.js";
@@ -15,6 +16,10 @@ export class GameIncursion {
     buildings;
     producerAreas;
     playerCharacter;
+    enemies;
+    progressLevel;
+    isIncursionOver;
+    isPlayerCaught;
     constructor(gameBoxNode, gameFrequency, resources) {
         this.gameBoxNode = gameBoxNode;
         this.menuNode = document.createElement("div");
@@ -31,11 +36,16 @@ export class GameIncursion {
         this.resources = resources;
         this.buildings = [];
         this.producerAreas = [];
+        this.enemies = [];
+        this.progressLevel = 1;
+        this.isIncursionOver = false;
+        this.isPlayerCaught = false;
         this.playerCharacter = new Character(30, 40, 50, 50, document.createElement("div"), this.baseNode, 10, 10, true);
         this.playerCharacter.node.id = "player-character";
         this.playerCharacter.node.innerText = "PLAYER";
         this.baseNode.append(this.playerCharacter.node);
         this.playerCharacter.render();
+        document.addEventListener("keydown", this.handleKeyboardEvents);
     }
     createIncursionUI = () => {
         this.gameBoxNode.append(this.menuNode);
@@ -61,7 +71,7 @@ export class GameIncursion {
             for (let j = 0; j < 3; j++) {
                 let dx = Math.floor(Math.random() * varX - varX / 2);
                 let dy = Math.floor(Math.random() * varY - varY / 2);
-                let ds = (Math.random() * varSize - varSize / 3) + 1;
+                let ds = Math.random() * varSize - varSize / 3 + 1;
                 let newBuilding = new Building(x + i * 350 + dx, y + j * 200 + dy, w * ds, h * ds, document.createElement("div"), "");
                 newBuilding.node.style.width = `${newBuilding.w}px`;
                 newBuilding.node.style.height = `${newBuilding.h}px`;
@@ -79,7 +89,7 @@ export class GameIncursion {
         // const y = Math.floor(Math.random() * (this.baseNode.offsetHeight - 2*h));
         const x = this.randomIntegerRange(this.baseNode.offsetWidth - w, 0);
         const y = this.randomIntegerRange(this.baseNode.offsetHeight - 2 * h, 0);
-        const ds = (Math.random() * varSize - varSize / 2) + 1;
+        const ds = Math.random() * varSize - varSize / 2 + 1;
         const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)];
         const newArea = new House(x, y, w * ds, h * ds, document.createElement("div"), "", resourceToGenerate, 5, 1);
         newArea.node.style.width = `${newArea.w}px`;
@@ -103,20 +113,45 @@ export class GameIncursion {
             }
         }
     };
+    handleKeyboardEvents = (event) => {
+        if (event.key === "Escape") {
+            this.isIncursionOver = true;
+        }
+    };
     hasPassedAPeriod = (tick, periodInSec) => {
-        return (tick % ((1000 / this.gameFrequency) * periodInSec) === 0);
+        return tick % ((1000 / this.gameFrequency) * periodInSec) === 0;
+    };
+    spawnEnemy = () => {
+        this.enemies.push(new Enemy(50, 50, this.baseNode, this.randomIntegerRange(4, 1)));
+    };
+    checkDespawnEnemy = () => {
+        if (this.enemies[0]?.shouldBeDeleted) {
+            this.enemies[0].node.remove();
+            this.enemies.shift();
+        }
     };
     gameLoop = (tick) => {
         this.playerCharacter.render();
-        this.producerAreas.forEach(area => {
+        this.producerAreas.forEach((area) => {
             if (this.hasPassedAPeriod(tick, area.periodInSec) && this.playerCharacter.isCollidingWith(area)) {
                 let amount = this.resources.get(area.resource);
                 if (amount !== undefined) {
                     this.resources.set(area.resource, amount + area.amountRate);
                 }
-                console.log(this.resources);
+                // console.log(this.resources);
             }
         });
+        if (this.hasPassedAPeriod(tick, this.randomIntegerRange(6 / this.progressLevel, 2 / this.progressLevel))) {
+            this.spawnEnemy();
+        }
+        this.enemies.forEach((enemy) => {
+            enemy.automaticMovement();
+            if (enemy.isCollidingWith(this.playerCharacter)) {
+                this.isIncursionOver = true;
+                this.isPlayerCaught = true;
+            }
+        });
+        this.checkDespawnEnemy();
         this.updateResourcesMenu();
     };
 }
