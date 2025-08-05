@@ -31,7 +31,7 @@ export class GameIncursion {
         this.resources = resources;
         this.buildings = [];
         this.producerAreas = [];
-        this.playerCharacter = new Character(30, 40, 50, 50, document.createElement("div"), gameBoxNode, 5, 5, true);
+        this.playerCharacter = new Character(30, 40, 50, 50, document.createElement("div"), this.baseNode, 10, 10, true);
         this.playerCharacter.node.id = "player-character";
         this.playerCharacter.node.innerText = "PLAYER";
         this.baseNode.append(this.playerCharacter.node);
@@ -91,10 +91,32 @@ export class GameIncursion {
         this.baseNode.append(newArea.node);
         setTimeout(() => {
             newArea.node.remove();
+            this.producerAreas.splice(this.producerAreas.indexOf(newArea), 1);
             setTimeout(() => this.createArea(), this.randomIntegerRange(20000, 1000));
         }, this.randomIntegerRange(10000, 5000));
     };
+    updateResourcesMenu = () => {
+        for (const resource of RESOURCES) {
+            const value = this.resources.get(resource);
+            if (value !== undefined) {
+                this.resourcesMenuSectionNode.updateAmount(resource, value);
+            }
+        }
+    };
+    hasPassedAPeriod = (tick, periodInSec) => {
+        return (tick % ((1000 / this.gameFrequency) * periodInSec) === 0);
+    };
     gameLoop = (tick) => {
         this.playerCharacter.render();
+        this.producerAreas.forEach(area => {
+            if (this.hasPassedAPeriod(tick, area.periodInSec) && this.playerCharacter.isCollidingWith(area)) {
+                let amount = this.resources.get(area.resource);
+                if (amount !== undefined) {
+                    this.resources.set(area.resource, amount + area.amountRate);
+                }
+                console.log(this.resources);
+            }
+        });
+        this.updateResourcesMenu();
     };
 }
