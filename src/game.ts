@@ -49,24 +49,12 @@ export class Game {
 
     startGame = () => {
         this.gameIdle.createBaseUI();
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
-        // this.gameIdle.addBuilding(HouseVenture);
         this.showBaseScreen();
         this.gameIntervalId = setInterval(this.gameLoop,this.gameFrequency)
+    }
+
+    startIncursion = () => { 
+        this.showIncursionScreen();
     }
 
     showStartScreen = () => {
