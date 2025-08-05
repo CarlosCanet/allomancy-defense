@@ -6,16 +6,28 @@ export interface HouseConstructor {
     new (...args: any[]): House;
     houseName: string;
     howManyBuildings: number;
+    costToBuild(): ResourceMap;
 }
 
 export class House extends Building {
     static houseName: string;
-    static howManyBuildings: number;
+    static howManyBuildings: number = 0;
     constructor(x: number, y: number, w: number, h: number, node: HTMLDivElement, name: string, resource: Resource, amountRate: number, periodInSec: number) {
         super(x, y, w, h, node, name, resource, amountRate, periodInSec);
         const ctor = this.constructor as typeof House;
         ctor.howManyBuildings++;
         node.classList.add("house-building");
+        const initialProductivity = 0.5;
+        const boostProductivity = 0;
+        this.amountRate = initialProductivity * (ctor.howManyBuildings + boostProductivity);
+    }
+
+    static costToBuild(): ResourceMap {
+        let totalCost = new Map();
+        const baseCost = 20;
+        const coefficient = 3.5;
+        totalCost.set(OTHER_RESOURCES.COINS, baseCost*(coefficient ** this.howManyBuildings))
+        return totalCost;
     }
 }
 

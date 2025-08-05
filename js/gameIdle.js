@@ -28,7 +28,7 @@ class MenuSection {
     updateAmount = (elementName, amount) => {
         const liNode = this.sectionNode.querySelector(`#${elementName}-btn span`);
         if (liNode) {
-            liNode.innerText = `${amount}`;
+            liNode.innerText = `${Math.floor(amount)}`;
         }
     };
 }
@@ -80,7 +80,7 @@ export class GameIdle {
         this.addBuildingButton(HouseElariel);
     };
     addBuildingButton = (HouseClass) => {
-        this.buildingsMenuSectionNode.addElement(HouseClass.houseName.replaceAll(" ", "-"), HouseClass.houseName, "click", () => this.addBuilding(HouseClass));
+        this.buildingsMenuSectionNode.addElement(HouseClass.houseName.replaceAll(" ", "-"), HouseClass.houseName, "click", () => this.buyBuilding(HouseClass));
     };
     addBuilding = (HouseSubclass) => {
         if (this.buildings.length < 16) {
@@ -99,6 +99,30 @@ export class GameIdle {
             }
         }
     };
+    canBuyBuilding = (HouseSubclass) => {
+        let canBuy = true;
+        const resourcesCost = HouseSubclass.costToBuild();
+        for (const [key, value] of resourcesCost) {
+            // console.log(resourcesCost, this.resources);
+            if (value > this.resources.get(key)) {
+                canBuy = false;
+                break;
+            }
+        }
+        return canBuy;
+    };
+    buyBuilding = (HouseSubclass) => {
+        if (this.canBuyBuilding(HouseSubclass)) {
+            const resourcesCost = HouseSubclass.costToBuild();
+            for (const [key, value] of resourcesCost.entries()) {
+                const myResourcesValue = this.resources.get(key);
+                if (myResourcesValue !== undefined) {
+                    this.resources.set(key, myResourcesValue - value);
+                }
+            }
+            this.addBuilding(HouseSubclass);
+        }
+    };
     hasPassedAPeriod = (tick, periodInSec) => {
         return (tick % ((1000 / this.gameFrequency) * periodInSec) === 0);
     };
@@ -107,12 +131,12 @@ export class GameIdle {
             if (this.hasPassedAPeriod(tick, house.periodInSec)) {
                 let amount = this.resources.get(house.resource);
                 if (amount !== undefined) {
-                    this.resources.set(house.resource, amount + 1);
+                    this.resources.set(house.resource, amount + house.amountRate);
                 }
             }
         });
         if (this.hasPassedAPeriod(tick, 2)) {
-            this.resources.set(OTHER_RESOURCES.COINS, this.resources.get(OTHER_RESOURCES.COINS) + 1);
+            this.resources.set(OTHER_RESOURCES.COINS, this.resources.get(OTHER_RESOURCES.COINS) + 10);
         }
         this.updateResourcesMenu();
     };
