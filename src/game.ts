@@ -42,7 +42,7 @@ export class Game {
         this.showStartScreen();
 
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
-        this.gameIncursion = new GameIncursion();
+        this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle.resources);
     }
 
 
@@ -54,6 +54,7 @@ export class Game {
     }
 
     startIncursion = () => { 
+        this.gameIncursion.createIncursionUI();
         this.showIncursionScreen();
     }
 
@@ -90,7 +91,11 @@ export class Game {
         // console.log(this);
         // Every building produce resource
         this.gameIdle.gameLoop(this.tick);
-        // this.gameIdle.gameLoop(this.tick);
+        if (!this.gameIncursion.isIncursionOver) {
+            this.gameIncursion.gameLoop(this.tick);
+        } else {
+            this.showBaseScreen();
+        }
     }
 
     gameOver = () => {

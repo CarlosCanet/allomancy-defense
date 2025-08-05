@@ -1,0 +1,38 @@
+#menu-base {
+  background-color: maroon;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 20%;
+  height: 100%;
+  padding: 20px;
+}
+
+#base-ui{
+  background-color: skyblue;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+#menu-base-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  li {
+    color: white;
+  }
+}
+
+.house-building {
+  border: solid 2px red;
+  border-radius: 20px;
+  height: 14%;
+  width: 15%;
+  padding: 20px;
+}

@@ -1,0 +1,66 @@
+#incursion-game-box {
+    flex-direction: column;
+}
+
+#menu-incursion {
+  background-color:mediumvioletred;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 10%;
+  padding: 20px;
+
+  #menu-incursion-list {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+  }
+}
+
+
+#incursion-ui {
+  background-color:darkslategrey;
+  height: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+.ul-menu-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 20px;
+    color: white;
+}
+
+.static-buildings {
+  position: absolute;
+}
+
+
+.area-producer {
+  position: absolute;
+  border: solid 3px red;
+  border-radius: 40%;
+  text-align: center;
+  color: white;
+  font-weight: 800;
+}
+
+#player-character {
+  position: absolute;
+  background-color: black;
+  /* transform: rotate(45deg); */
+  color: white;
+  font-size: 0.6em;
+  z-index: 1;
+}
+
+.enemy {
+  position: absolute;
+  background-color: red;
+  border-radius: 50%;
+  text-align: center;
+}

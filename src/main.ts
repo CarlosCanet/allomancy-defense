@@ -22,6 +22,7 @@ const startBtnNode = document.querySelector("#start-btn");
 // ** GLOBAL GAME VARIABLES ** //
 const allomancyGame = new Game(gameScreens);
 allomancyGame.startGame();
+allomancyGame.startIncursion();
 
 // ** GLOBAL GAME FUNCTIONS ** //
 

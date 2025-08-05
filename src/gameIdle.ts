@@ -4,7 +4,7 @@ import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture,
 
 export type ResourceMap = Map<Resource, number>;
 
-class MenuSection {
+export class MenuSection {
     sectionNode: HTMLDivElement;
     titleNode: HTMLHeadElement;
     listNode: HTMLUListElement;
@@ -49,7 +49,7 @@ export class GameIdle {
     alliesMenuSectionNode: MenuSection;
     gameFrequency: number;
     resources: ResourceMap;
-    buildings: Array<Building>;
+    buildings: Array<House>;
     
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
         this.gameBoxNode = gameBoxNode;
@@ -57,7 +57,8 @@ export class GameIdle {
         this.menuNode.classList.add("menu");
         this.menuNode.id = "menu-base";
         this.baseButtonsNode = document.createElement("ul");
-        this.baseButtonsNode.classList.add("menu-base-list");
+        this.baseButtonsNode.classList.add("menu-list");
+        this.baseButtonsNode.id = "menu-base-list";
         this.baseNode = document.createElement("div");
         this.baseNode.id = "base-ui";
         this.resourcesMenuSectionNode = new MenuSection("Resources");

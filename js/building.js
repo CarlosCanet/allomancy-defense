@@ -1,16 +1,12 @@
 import { GameObject } from "./gameObject.js";
 export class Building extends GameObject {
-    resource;
-    amountRate;
-    periodInSec;
     name;
     static myId = 0;
-    constructor(x, y, w, h, node, name, resource, amountRate, periodInSec) {
+    constructor(x, y, w, h, node, name) {
         super(x, y, w, h, node);
         this.node.style.backgroundColor = `#${Math.random().toString(16).slice(-6)}`;
-        this.resource = resource;
-        this.amountRate = amountRate;
-        this.periodInSec = periodInSec;
+        // this.node.style.width = `${w}px`;
+        // this.node.style.height = `${h}px`;
         this.name = name;
         Building.myId++;
     }
