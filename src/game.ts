@@ -42,7 +42,7 @@ export class Game {
         this.showStartScreen();
 
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
-        this.gameIncursion = new GameIncursion();
+        this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency);
     }
 
 
@@ -54,6 +54,7 @@ export class Game {
     }
 
     startIncursion = () => { 
+        this.gameIncursion.createIncursionUI();
         this.showIncursionScreen();
     }
 

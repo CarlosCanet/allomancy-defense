@@ -32,7 +32,7 @@ export class Game {
         this.gameIntervalId = 0;
         this.showStartScreen();
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
-        this.gameIncursion = new GameIncursion();
+        this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency);
     }
     startGame = () => {
         this.gameIdle.createBaseUI();
@@ -40,6 +40,7 @@ export class Game {
         this.gameIntervalId = setInterval(this.gameLoop, this.gameFrequency);
     };
     startIncursion = () => {
+        this.gameIncursion.createIncursionUI();
         this.showIncursionScreen();
     };
     showStartScreen = () => {
