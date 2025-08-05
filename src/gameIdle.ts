@@ -49,7 +49,7 @@ export class GameIdle {
     alliesMenuSectionNode: MenuSection;
     gameFrequency: number;
     resources: ResourceMap;
-    buildings: Array<Building>;
+    buildings: Array<House>;
     
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
         this.gameBoxNode = gameBoxNode;

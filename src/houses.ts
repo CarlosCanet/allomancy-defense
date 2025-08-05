@@ -12,8 +12,15 @@ export interface HouseConstructor {
 export class House extends Building {
     static houseName: string;
     static howManyBuildings: number = 0;
+    resource: Resource;
+    amountRate: number;
+    periodInSec: number;
     constructor(x: number, y: number, w: number, h: number, node: HTMLDivElement, name: string, resource: Resource, amountRate: number, periodInSec: number) {
-        super(x, y, w, h, node, name, resource, amountRate, periodInSec);
+        super(x, y, w, h, node, name);
+        this.resource = resource;
+        this.amountRate = amountRate;
+        this.periodInSec = periodInSec;
+        
         const ctor = this.constructor as typeof House;
         ctor.howManyBuildings++;
         node.classList.add("house-building");

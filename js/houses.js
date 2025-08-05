@@ -3,8 +3,14 @@ import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./game.js";
 export class House extends Building {
     static houseName;
     static howManyBuildings = 0;
+    resource;
+    amountRate;
+    periodInSec;
     constructor(x, y, w, h, node, name, resource, amountRate, periodInSec) {
-        super(x, y, w, h, node, name, resource, amountRate, periodInSec);
+        super(x, y, w, h, node, name);
+        this.resource = resource;
+        this.amountRate = amountRate;
+        this.periodInSec = periodInSec;
         const ctor = this.constructor;
         ctor.howManyBuildings++;
         node.classList.add("house-building");
