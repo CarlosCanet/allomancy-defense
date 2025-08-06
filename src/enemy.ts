@@ -37,7 +37,6 @@ export class Enemy extends Character {
                 break;
         }
         this.gameBoxNode.append(this.node);
-        console.log(this);
     };
 
     isOutsideGameBox = (): boolean => {
