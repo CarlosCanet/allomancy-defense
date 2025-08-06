@@ -1,5 +1,6 @@
 import { Building } from "./building.js";
 import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES, type Resource } from "./game.js";
+import { GameIncursion } from "./gameIncursion.js";
 import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture, type HouseConstructor } from "./houses.js";
 
 export type ResourceMap = Map<Resource, number>;
@@ -20,11 +21,11 @@ export class MenuSection {
         this.sectionNode.append(this.listNode);
     }
 
-    addElement = (elementId: string, elementText: string, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
+    addElement = (elementId: string, elementText: string, amount: number, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
         const newLiNode = document.createElement("li");
         newLiNode.classList.add("listMenu");
         newLiNode.id = `${elementId}-btn`;
-        newLiNode.innerHTML = `${elementText} <span>0</span>`;
+        newLiNode.innerHTML = `${elementText} <span>${amount}</span>`;
         if (event && eventHandler) {
             newLiNode.addEventListener(event, eventHandler);  
         }
@@ -50,6 +51,8 @@ export class GameIdle {
     gameFrequency: number;
     resources: ResourceMap;
     buildings: Array<House>;
+    shouldStartIncursion: boolean;
+    startIncursionBtnNode: HTMLButtonElement;
     
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
         this.gameBoxNode = gameBoxNode;
@@ -64,13 +67,16 @@ export class GameIdle {
         this.resourcesMenuSectionNode = new MenuSection("Resources");
         this.buildingsMenuSectionNode = new MenuSection("Buildings");
         this.alliesMenuSectionNode = new MenuSection("Allies");
+        this.startIncursionBtnNode = document.createElement("button");
 
         this.gameFrequency = gameFrequency;
         this.resources = new Map();
         this.buildings = [];
+        this.shouldStartIncursion = false;
     }
 
-    createBaseUI = (): void =>  {
+    createBaseUI = (): void => {
+        this.gameBoxNode.innerHTML = "";
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
         const h2Node = document.createElement("h2");
@@ -80,19 +86,24 @@ export class GameIdle {
         this.baseButtonsNode.append(this.resourcesMenuSectionNode.sectionNode);
         this.baseButtonsNode.append(this.buildingsMenuSectionNode.sectionNode);
         this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);
+        // this.startIncursionNode.addEventListener("click");
         RESOURCES.forEach((resource) => {
             this.resources.set(resource, 0);
-            this.resourcesMenuSectionNode.addElement(resource, resource);
+            this.resourcesMenuSectionNode.addElement(resource, resource, 0);
         });
         this.addBuildingButton(HouseVenture);
         this.addBuildingButton(HouseCett);
         this.addBuildingButton(HouseLekal);
         this.addBuildingButton(HouseHasting);
         this.addBuildingButton(HouseElariel);
+        this.startIncursionBtnNode.innerText = "Start incursion";
+        this.startIncursionBtnNode.id = "start-incursion-btn";
+        this.startIncursionBtnNode.addEventListener("click", () => this.shouldStartIncursion = true);
+        this.menuNode.append((this.startIncursionBtnNode));        
     }
 
     addBuildingButton = (HouseClass: HouseConstructor): void => {
-        this.buildingsMenuSectionNode.addElement(HouseClass.houseName.replaceAll(" ", "-"), HouseClass.houseName, "click", () => this.buyBuilding(HouseClass));
+        this.buildingsMenuSectionNode.addElement(HouseClass.houseName.replaceAll(" ", "-"), HouseClass.houseName, 0, "click", () => this.buyBuilding(HouseClass));
     }
 
     addBuilding = (HouseSubclass: HouseConstructor): void => {
@@ -118,7 +129,6 @@ export class GameIdle {
         let canBuy = true;
         const resourcesCost = HouseSubclass.costToBuild();
         for (const [key, value] of resourcesCost) {
-            // console.log(resourcesCost, this.resources);
             if (value > this.resources.get(key)!) {
                 canBuy = false;
                 break;

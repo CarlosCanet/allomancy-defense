@@ -1,5 +1,6 @@
 import { Building } from "./building.js";
 import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./game.js";
+import { GameIncursion } from "./gameIncursion.js";
 import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture } from "./houses.js";
 export class MenuSection {
     sectionNode;
@@ -15,11 +16,11 @@ export class MenuSection {
         this.sectionNode.append(this.titleNode);
         this.sectionNode.append(this.listNode);
     }
-    addElement = (elementId, elementText, event, eventHandler) => {
+    addElement = (elementId, elementText, amount, event, eventHandler) => {
         const newLiNode = document.createElement("li");
         newLiNode.classList.add("listMenu");
         newLiNode.id = `${elementId}-btn`;
-        newLiNode.innerHTML = `${elementText} <span>0</span>`;
+        newLiNode.innerHTML = `${elementText} <span>${amount}</span>`;
         if (event && eventHandler) {
             newLiNode.addEventListener(event, eventHandler);
         }
@@ -43,6 +44,8 @@ export class GameIdle {
     gameFrequency;
     resources;
     buildings;
+    shouldStartIncursion;
+    startIncursionBtnNode;
     constructor(gameBoxNode, gameFrequency) {
         this.gameBoxNode = gameBoxNode;
         this.menuNode = document.createElement("div");
@@ -56,11 +59,14 @@ export class GameIdle {
         this.resourcesMenuSectionNode = new MenuSection("Resources");
         this.buildingsMenuSectionNode = new MenuSection("Buildings");
         this.alliesMenuSectionNode = new MenuSection("Allies");
+        this.startIncursionBtnNode = document.createElement("button");
         this.gameFrequency = gameFrequency;
         this.resources = new Map();
         this.buildings = [];
+        this.shouldStartIncursion = false;
     }
     createBaseUI = () => {
+        this.gameBoxNode.innerHTML = "";
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
         const h2Node = document.createElement("h2");
@@ -70,18 +76,23 @@ export class GameIdle {
         this.baseButtonsNode.append(this.resourcesMenuSectionNode.sectionNode);
         this.baseButtonsNode.append(this.buildingsMenuSectionNode.sectionNode);
         this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);
+        // this.startIncursionNode.addEventListener("click");
         RESOURCES.forEach((resource) => {
             this.resources.set(resource, 0);
-            this.resourcesMenuSectionNode.addElement(resource, resource);
+            this.resourcesMenuSectionNode.addElement(resource, resource, 0);
         });
         this.addBuildingButton(HouseVenture);
         this.addBuildingButton(HouseCett);
         this.addBuildingButton(HouseLekal);
         this.addBuildingButton(HouseHasting);
         this.addBuildingButton(HouseElariel);
+        this.startIncursionBtnNode.innerText = "Start incursion";
+        this.startIncursionBtnNode.id = "start-incursion-btn";
+        this.startIncursionBtnNode.addEventListener("click", () => this.shouldStartIncursion = true);
+        this.menuNode.append((this.startIncursionBtnNode));
     };
     addBuildingButton = (HouseClass) => {
-        this.buildingsMenuSectionNode.addElement(HouseClass.houseName.replaceAll(" ", "-"), HouseClass.houseName, "click", () => this.buyBuilding(HouseClass));
+        this.buildingsMenuSectionNode.addElement(HouseClass.houseName.replaceAll(" ", "-"), HouseClass.houseName, 0, "click", () => this.buyBuilding(HouseClass));
     };
     addBuilding = (HouseSubclass) => {
         if (this.buildings.length < 16) {
@@ -104,7 +115,6 @@ export class GameIdle {
         let canBuy = true;
         const resourcesCost = HouseSubclass.costToBuild();
         for (const [key, value] of resourcesCost) {
-            // console.log(resourcesCost, this.resources);
             if (value > this.resources.get(key)) {
                 canBuy = false;
                 break;

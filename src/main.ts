@@ -16,13 +16,13 @@ const gameScreens: Screens = {
     gameOverScreenNode: gameOverScreenNode,
 };
 // Buttons
-const startBtnNode = document.querySelector("#start-btn");
+
 // Other things
 
 // ** GLOBAL GAME VARIABLES ** //
 const allomancyGame = new Game(gameScreens);
 allomancyGame.startGame();
-allomancyGame.startIncursion();
+// allomancyGame.startIncursion();
 
 // ** GLOBAL GAME FUNCTIONS ** //
 

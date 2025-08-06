@@ -36,6 +36,7 @@ export class GameIncursion {
 
         this.gameFrequency = gameFrequency;
         this.resources = resources;
+        console.log(resources);
         this.buildings = [];
         this.producerAreas = [];
         this.enemies = [];
@@ -52,6 +53,7 @@ export class GameIncursion {
     }
 
     createIncursionUI = (): void => {
+        this.gameBoxNode.innerHTML = "";
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
         const h2Node = document.createElement("h2");
@@ -60,10 +62,9 @@ export class GameIncursion {
         this.menuNode.append(this.baseButtonsNode);
         this.baseButtonsNode.append(this.resourcesMenuSectionNode.sectionNode);
         this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);
-        RESOURCES.forEach((resource) => {
-            this.resources.set(resource, 0);
-            this.resourcesMenuSectionNode.addElement(resource, resource);
-        });
+        for (const [key, value] of this.resources.entries()) {
+            this.resourcesMenuSectionNode.addElement(key, key, value);
+        }
         this.createBuildings();
         setTimeout(this.createArea, 100);
         setTimeout(this.createArea, this.randomIntegerRange(5000, 1000));
@@ -159,7 +160,6 @@ export class GameIncursion {
                 if (amount !== undefined) {
                     this.resources.set(area.resource, amount + area.amountRate);
                 }
-                // console.log(this.resources);
             }
         });
         if (this.hasPassedAPeriod(tick, this.randomIntegerRange(6 / this.progressLevel, 2 / this.progressLevel))) {
