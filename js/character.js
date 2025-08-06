@@ -1,57 +1,52 @@
 import { GameObject } from "./gameObject.js";
+import { Projectile } from "./projectile.js";
 export class Character extends GameObject {
-    gameBoxNode;
-    speedX;
-    speedY;
     isPlayer;
+    projectiles;
+    canShoot;
+    timeBetweenShoots;
     constructor(x, y, w, h, node, gameBoxNode, speedX, speedY, isPlayer) {
-        super(x, y, w, h, node);
-        this.gameBoxNode = gameBoxNode;
-        this.speedX = speedX;
-        this.speedY = speedY;
+        super(x, y, w, h, speedX, speedY, node, gameBoxNode);
         this.isPlayer = isPlayer;
         this.node.style.width = `${w}px`;
         this.node.style.height = `${h}px`;
+        this.projectiles = [];
+        this.canShoot = true;
+        this.timeBetweenShoots = 300;
         if (this.isPlayer) {
             document.addEventListener("keydown", this.handleKeys);
+            document.addEventListener("click", this.handleClick);
         }
     }
     handleKeys = (event) => {
         if (event.key === "w" || event.key === "ArrowUp") {
-            this.moveUp();
+            this.moveUp(this.isPlayer);
         }
         else if (event.key === "s" || event.key === "ArrowDown") {
-            this.moveDown();
+            this.moveDown(this.isPlayer);
         }
         else if (event.key === "a" || event.key === "ArrowLeft") {
-            this.moveLeft();
+            this.moveLeft(this.isPlayer);
         }
         else if (event.key === "d" || event.key === "ArrowRight") {
-            this.moveRight();
+            this.moveRight(this.isPlayer);
         }
     };
-    moveUp = () => {
-        this.y -= this.speedY;
-        if (this.y < 0) {
-            this.y = 0;
+    handleClick = (event) => {
+        if (this.canShoot) {
+            this.createProjectile(event.layerX, event.layerY);
+            this.canShoot = false;
+            setTimeout(() => this.canShoot = true, this.timeBetweenShoots);
         }
     };
-    moveDown = () => {
-        this.y += this.speedY;
-        if (this.y > this.gameBoxNode.offsetHeight - this.h) {
-            this.y = this.gameBoxNode.offsetHeight - this.h;
-        }
+    createProjectile = (directionX, directionY) => {
+        const projectileHeight = 10, projectileWidth = 10;
+        const speedX = 4, speedY = 4;
+        const newProjectile = new Projectile(this.x + this.w / 2 - projectileWidth / 2, this.y + this.h / 2 - projectileHeight / 2, projectileWidth, projectileHeight, speedX, speedY, document.createElement("div"), this.gameBoxNode, directionX, directionY);
+        this.projectiles.push(newProjectile);
+        this.gameBoxNode.append(newProjectile.node);
     };
-    moveLeft = () => {
-        this.x -= this.speedX;
-        if (this.x < 0) {
-            this.x = 0;
-        }
-    };
-    moveRight = () => {
-        this.x += this.speedX;
-        if (this.x > this.gameBoxNode.offsetWidth - this.w) {
-            this.x = this.gameBoxNode.offsetWidth - this.w;
-        }
+    cleanProjectiles = () => {
+        this.projectiles = this.projectiles.filter(projectile => !projectile.isOnTarget);
     };
 }

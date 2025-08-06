@@ -36,7 +36,7 @@ export class Game {
         this.gameIntervalId = 0;
         this.showStartScreen();
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
-        this.gameIncursion;
+        this.gameIncursion = null;
         this.createStartUI();
     }
     createStartUI = () => {
@@ -55,12 +55,14 @@ export class Game {
         this.gameIntervalId = setInterval(this.gameLoop, this.gameFrequency);
     };
     startIncursion = () => {
+        this.gameState = GameStates.Incursioning;
         this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle.resources);
         this.gameIdle.shouldStartIncursion = false;
         this.gameIncursion.createIncursionUI();
         this.showIncursionScreen();
     };
     finishIncursion = () => {
+        this.gameIncursion = null;
         this.showBaseScreen();
     };
     showStartScreen = () => {
@@ -100,8 +102,8 @@ export class Game {
                 }
                 break;
             case GameStates.Incursioning:
-                this.gameIncursion.gameLoop(this.tick);
-                this.gameIncursion.isIncursionOver && (this.gameState = GameStates.BaseBuilding) && this.finishIncursion();
+                this.gameIncursion && this.gameIncursion.gameLoop(this.tick);
+                this.gameIncursion && this.gameIncursion.isIncursionOver && (this.gameState = GameStates.BaseBuilding) && this.finishIncursion();
                 break;
             case GameStates.GameOver:
                 this.gameOver();

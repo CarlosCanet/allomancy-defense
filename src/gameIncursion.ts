@@ -36,7 +36,6 @@ export class GameIncursion {
 
         this.gameFrequency = gameFrequency;
         this.resources = resources;
-        console.log(resources);
         this.buildings = [];
         this.producerAreas = [];
         this.enemies = [];
@@ -71,19 +70,14 @@ export class GameIncursion {
     };
 
     createBuildings = (): void => {
-        const varX = 150,
-            varY = 50,
-            varSize = 0.5;
-        const x = 150,
-            y = 80,
-            w = 100,
-            h = 100;
+        const varX = 150, varY = 50, varSize = 0.5;
+        const x = 150, y = 80, w = 100, h = 100;
         for (let i = 0; i < 5; i++) {
             for (let j = 0; j < 3; j++) {
                 let dx = Math.floor(Math.random() * varX - varX / 2);
                 let dy = Math.floor(Math.random() * varY - varY / 2);
                 let ds = Math.random() * varSize - varSize / 3 + 1;
-                let newBuilding = new Building(x + i * 350 + dx, y + j * 200 + dy, w * ds, h * ds, document.createElement("div"), "");
+                let newBuilding = new Building(x + i * 350 + dx, y + j * 200 + dy, w * ds, h * ds, document.createElement("div"), this.gameBoxNode, "");
                 newBuilding.node.style.width = `${newBuilding.w}px`;
                 newBuilding.node.style.height = `${newBuilding.h}px`;
                 newBuilding.node.classList.add("static-buildings");
@@ -97,16 +91,14 @@ export class GameIncursion {
     randomIntegerRange = (range: number, startValue: number) => Math.floor(Math.random() * range + startValue);
 
     createArea = (): void => {
-        const w = 100,
-            h = 100,
-            varSize = 1;
+        const w = 100, h = 100, varSize = 1;
         // const x = Math.floor(Math.random() * (this.baseNode.offsetWidth - w));
         // const y = Math.floor(Math.random() * (this.baseNode.offsetHeight - 2*h));
         const x = this.randomIntegerRange(this.baseNode.offsetWidth - w, 0);
         const y = this.randomIntegerRange(this.baseNode.offsetHeight - 2 * h, 0);
         const ds = Math.random() * varSize - varSize / 2 + 1;
         const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)];
-        const newArea = new House(x, y, w * ds, h * ds, document.createElement("div"), "", resourceToGenerate!, 5, 1);
+        const newArea = new House(x, y, w * ds, h * ds, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate!, 5, 1);
         newArea.node.style.width = `${newArea.w}px`;
         newArea.node.style.height = `${newArea.h}px`;
         newArea.node.classList.add("area-producer");
@@ -153,7 +145,20 @@ export class GameIncursion {
     };
 
     gameLoop = (tick: number): void => {
+        // Player and its projectiles
         this.playerCharacter.render();
+        this.playerCharacter.projectiles.forEach(projectile => {
+            projectile.moveTowardsTarget()
+            this.enemies.forEach((enemy, index) => {
+                if (projectile.isCollidingWith(enemy)) {
+                    enemy.node.remove();
+                    this.enemies.splice(index, 1);
+                }
+            });
+        });
+        this.playerCharacter.cleanProjectiles();
+
+        // Producer areas
         this.producerAreas.forEach((area) => {
             if (this.hasPassedAPeriod(tick, area.periodInSec) && this.playerCharacter.isCollidingWith(area)) {
                 let amount = this.resources.get(area.resource);
@@ -162,6 +167,8 @@ export class GameIncursion {
                 }
             }
         });
+
+        // Enemies and its projectiles
         if (this.hasPassedAPeriod(tick, this.randomIntegerRange(6 / this.progressLevel, 2 / this.progressLevel))) {
             this.spawnEnemy();
         }
@@ -173,6 +180,8 @@ export class GameIncursion {
             }
         });
         this.checkDespawnEnemy();
+
+        // Resources
         this.updateResourcesMenu();
     };
 }
