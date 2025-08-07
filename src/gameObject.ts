@@ -78,7 +78,7 @@ export class GameObject {
 
     render = (tick?: number): void => {
         if (this.spritesSrc.length !== 0 && tick) {
-            const newURL = `url("${this.spritesSrc[Math.floor(tick / this.spriteTicks * Math.max(this.speedX, this.speedY)) % this.spritesSrc.length]!}")`;
+            const newURL = `url("${this.spritesSrc[Math.floor(tick / this.spriteTicks * Math.max(Math.abs(this.speedX), Math.abs(this.speedY))) % this.spritesSrc.length]!}")`;
             if (newURL !== this.node.style.backgroundImage) {
                 this.node.style.backgroundImage = newURL;
             }

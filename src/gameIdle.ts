@@ -1,95 +1,28 @@
-import { Building } from "./building.js";
-import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES, type Resource } from "./game.js";
-import { GameIncursion } from "./gameIncursion.js";
+import { OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
 import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture, type HouseConstructor } from "./houses.js";
+import { Game, MenuSection } from "./game.js";
 
-export type ResourceMap = Map<Resource, number>;
 
-export class MenuSection {
-    sectionNode: HTMLDivElement;
-    titleNode: HTMLHeadElement;
-    listNode: HTMLUListElement;
-    liClassName: string;
-
-    constructor(title: string, liClassName: string) {
-        this.sectionNode = document.createElement("div");
-        this.titleNode = document.createElement("h2");
-        this.listNode = document.createElement("ul");
-        this.listNode.classList.add("ul-menu-list");
-        this.listNode.id = `${title}-ul`;
-        this.titleNode.innerText = title;
-        this.sectionNode.append(this.titleNode);
-        this.sectionNode.append(this.listNode);
-        this.liClassName = liClassName;
-    }
-
-    addElement = (elementId: string, elementText: string, amount: number, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
-        const newLiNode = document.createElement("li");
-        newLiNode.classList.add("listMenu");
-        newLiNode.classList.add(this.liClassName);
-        newLiNode.id = `${elementId}-btn`;
-        if (this.titleNode.innerText === "Resources") {
-            newLiNode.innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`
-        } else {
-            newLiNode.innerHTML = `<span>${elementText}</span> <span id="amount">${amount}</span>`;
-        }
-        if (event && eventHandler) {
-            newLiNode.addEventListener(event, eventHandler);  
-        }
-        this.listNode.append(newLiNode);
-    }
-
-    addElementWithIcon = (elementId: string, elementText: string, amount: number, iconSrc: string, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
-        const newLiNode = document.createElement("li");
-        newLiNode.classList.add("listMenu");
-        newLiNode.classList.add(this.liClassName);
-        newLiNode.id = `${elementId}-btn`;
-        newLiNode.innerHTML = `<img src="${iconSrc}"/><span>${elementText}</span> <span id="amount">${amount}</span>`;
-        if (event && eventHandler) {
-            newLiNode.addEventListener(event, eventHandler);  
-        }
-        this.listNode.append(newLiNode);
-    }
-
-    updateAmount = (elementName: string, amount: number) => {
-        const liNode = this.sectionNode.querySelector<HTMLLIElement>(`#${elementName}-btn #amount`);
-        if (liNode) {
-            liNode.innerText = `${Math.floor(amount)}`;            
-        }
-    }
-}
-
-export class GameIdle {
-    gameBoxNode: HTMLDivElement;
-    menuNode: HTMLDivElement;
-    baseNode: HTMLDivElement;
-    baseButtonsNode: HTMLUListElement;
+export class GameIdle extends Game {
     resourcesMenuSectionNode: MenuSection;
     buildingsMenuSectionNode: MenuSection;
     alliesMenuSectionNode: MenuSection;
-    gameFrequency: number;
-    resources: ResourceMap;
-    buildings: Array<House>;
     shouldStartIncursion: boolean;
     startIncursionBtnNode: HTMLButtonElement;
+    buildings: Array<House>;
     
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
-        this.gameBoxNode = gameBoxNode;
-        this.menuNode = document.createElement("div");
+        super(gameBoxNode, gameFrequency);
         this.menuNode.classList.add("menu");
         this.menuNode.id = "menu-base";
-        this.baseButtonsNode = document.createElement("ul");
         this.baseButtonsNode.classList.add("menu-list");
         this.baseButtonsNode.id = "menu-base-list";
-        this.baseNode = document.createElement("div");
         this.baseNode.id = "base-ui";
         this.resourcesMenuSectionNode = new MenuSection("Resources", "resources-li");
         this.buildingsMenuSectionNode = new MenuSection("Buildings", "buildings-li");
         this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");
         this.startIncursionBtnNode = document.createElement("button");
 
-        this.gameFrequency = gameFrequency;
-        this.resources = new Map();
         this.buildings = [];
         this.shouldStartIncursion = false;
     }
@@ -135,15 +68,6 @@ export class GameIdle {
         }
     }
 
-    updateResourcesMenu = () => {
-        for (const resource of RESOURCES) {
-            const value = this.resources.get(resource);
-            if (value !== undefined) {
-                this.resourcesMenuSectionNode.updateAmount(resource, value);
-            }
-        }
-    }
-
     canBuyBuilding = (HouseSubclass: HouseConstructor): boolean => {
         let canBuy = true;
         const resourcesCost = HouseSubclass.costToBuild();
@@ -167,10 +91,6 @@ export class GameIdle {
             }
             this.addBuilding(HouseSubclass);
         }
-    }
-
-    hasPassedAPeriod = (tick: number, periodInSec: number): boolean => {
-        return (tick % ((1000 / this.gameFrequency) * periodInSec) === 0);
     }
 
     gameLoop = (tick: number): void => {

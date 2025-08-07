@@ -1,19 +1,12 @@
 import { Building } from "./building.js";
 import { Character } from "./character.js";
 import { Enemy } from "./enemy.js";
-import { METALS_RESOURCES, RESOURCES } from "./game.js";
-import { MenuSection } from "./gameIdle.js";
+import { RESOURCES } from "./allomancyDefenseGame.js";
 import { House } from "./houses.js";
-export class GameIncursion {
-    gameBoxNode;
-    menuNode;
-    baseNode;
-    baseButtonsNode;
+import { Game, MenuSection } from "./game.js";
+export class GameIncursion extends Game {
     resourcesMenuSectionNode;
     alliesMenuSectionNode;
-    gameFrequency;
-    resources;
-    buildings;
     producerAreas;
     playerCharacter;
     enemies;
@@ -21,20 +14,15 @@ export class GameIncursion {
     isIncursionOver;
     isPlayerCaught;
     constructor(gameBoxNode, gameFrequency, resources) {
-        this.gameBoxNode = gameBoxNode;
-        this.menuNode = document.createElement("div");
+        super(gameBoxNode, gameFrequency);
         this.menuNode.classList.add("menu");
         this.menuNode.id = "menu-incursion";
-        this.baseButtonsNode = document.createElement("ul");
         this.baseButtonsNode.classList.add("menu-list");
         this.baseButtonsNode.id = "menu-incursion-list";
-        this.baseNode = document.createElement("div");
         this.baseNode.id = "incursion-ui";
         this.resourcesMenuSectionNode = new MenuSection("Resources", "resources-li");
         this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");
-        this.gameFrequency = gameFrequency;
         this.resources = resources;
-        this.buildings = [];
         this.producerAreas = [];
         this.enemies = [];
         this.progressLevel = 1;
@@ -81,7 +69,6 @@ export class GameIncursion {
             }
         }
     };
-    randomIntegerRange = (range, startValue) => Math.floor(Math.random() * range + startValue);
     createArea = () => {
         const w = 100, h = 100, varSize = 1;
         // const x = Math.floor(Math.random() * (this.baseNode.offsetWidth - w));
@@ -105,21 +92,10 @@ export class GameIncursion {
             setTimeout(() => this.createArea(), this.randomIntegerRange(20000, 1000));
         }, this.randomIntegerRange(10000, 5000));
     };
-    updateResourcesMenu = () => {
-        for (const resource of RESOURCES) {
-            const value = this.resources.get(resource);
-            if (value !== undefined) {
-                this.resourcesMenuSectionNode.updateAmount(resource, value);
-            }
-        }
-    };
     handleKeyboardEvents = (event) => {
         if (event.key === "Escape") {
             this.isIncursionOver = true;
         }
-    };
-    hasPassedAPeriod = (tick, periodInSec) => {
-        return tick % ((1000 / this.gameFrequency) * periodInSec) === 0;
     };
     spawnEnemy = () => {
         this.enemies.push(new Enemy(32, 53, this.baseNode, this.randomIntegerRange(4, 1)));

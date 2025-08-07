@@ -1,5 +1,5 @@
 import { Building } from "./building.js";
-import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./game.js";
+import { METALS_RESOURCES, OTHER_RESOURCES } from "./allomancyDefenseGame.js";
 export class House extends Building {
     static houseName;
     static howManyBuildings = 0;

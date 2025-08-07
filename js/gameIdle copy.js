@@ -1,24 +1,86 @@
-import { OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
+import { Building } from "./building.js";
+import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
+import { GameIncursion } from "./gameIncursion.js";
 import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture } from "./houses.js";
-import { Game, MenuSection } from "./game.js";
-export class GameIdle extends Game {
+export class MenuSection {
+    sectionNode;
+    titleNode;
+    listNode;
+    liClassName;
+    constructor(title, liClassName) {
+        this.sectionNode = document.createElement("div");
+        this.titleNode = document.createElement("h2");
+        this.listNode = document.createElement("ul");
+        this.listNode.classList.add("ul-menu-list");
+        this.listNode.id = `${title}-ul`;
+        this.titleNode.innerText = title;
+        this.sectionNode.append(this.titleNode);
+        this.sectionNode.append(this.listNode);
+        this.liClassName = liClassName;
+    }
+    addElement = (elementId, elementText, amount, event, eventHandler) => {
+        const newLiNode = document.createElement("li");
+        newLiNode.classList.add("listMenu");
+        newLiNode.classList.add(this.liClassName);
+        newLiNode.id = `${elementId}-btn`;
+        if (this.titleNode.innerText === "Resources") {
+            newLiNode.innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`;
+        }
+        else {
+            newLiNode.innerHTML = `<span>${elementText}</span> <span id="amount">${amount}</span>`;
+        }
+        if (event && eventHandler) {
+            newLiNode.addEventListener(event, eventHandler);
+        }
+        this.listNode.append(newLiNode);
+    };
+    addElementWithIcon = (elementId, elementText, amount, iconSrc, event, eventHandler) => {
+        const newLiNode = document.createElement("li");
+        newLiNode.classList.add("listMenu");
+        newLiNode.classList.add(this.liClassName);
+        newLiNode.id = `${elementId}-btn`;
+        newLiNode.innerHTML = `<img src="${iconSrc}"/><span>${elementText}</span> <span id="amount">${amount}</span>`;
+        if (event && eventHandler) {
+            newLiNode.addEventListener(event, eventHandler);
+        }
+        this.listNode.append(newLiNode);
+    };
+    updateAmount = (elementName, amount) => {
+        const liNode = this.sectionNode.querySelector(`#${elementName}-btn #amount`);
+        if (liNode) {
+            liNode.innerText = `${Math.floor(amount)}`;
+        }
+    };
+}
+export class GameIdle {
+    gameBoxNode;
+    menuNode;
+    baseNode;
+    baseButtonsNode;
     resourcesMenuSectionNode;
     buildingsMenuSectionNode;
     alliesMenuSectionNode;
+    gameFrequency;
+    resources;
+    buildings;
     shouldStartIncursion;
     startIncursionBtnNode;
-    buildings;
     constructor(gameBoxNode, gameFrequency) {
-        super(gameBoxNode, gameFrequency);
+        this.gameBoxNode = gameBoxNode;
+        this.menuNode = document.createElement("div");
         this.menuNode.classList.add("menu");
         this.menuNode.id = "menu-base";
+        this.baseButtonsNode = document.createElement("ul");
         this.baseButtonsNode.classList.add("menu-list");
         this.baseButtonsNode.id = "menu-base-list";
+        this.baseNode = document.createElement("div");
         this.baseNode.id = "base-ui";
         this.resourcesMenuSectionNode = new MenuSection("Resources", "resources-li");
         this.buildingsMenuSectionNode = new MenuSection("Buildings", "buildings-li");
         this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");
         this.startIncursionBtnNode = document.createElement("button");
+        this.gameFrequency = gameFrequency;
+        this.resources = new Map();
         this.buildings = [];
         this.shouldStartIncursion = false;
     }
@@ -60,6 +122,14 @@ export class GameIdle extends Game {
             this.buildingsMenuSectionNode.updateAmount(`${HouseSubclass.houseName.replace(" ", "-")}`, HouseSubclass.howManyBuildings);
         }
     };
+    updateResourcesMenu = () => {
+        for (const resource of RESOURCES) {
+            const value = this.resources.get(resource);
+            if (value !== undefined) {
+                this.resourcesMenuSectionNode.updateAmount(resource, value);
+            }
+        }
+    };
     canBuyBuilding = (HouseSubclass) => {
         let canBuy = true;
         const resourcesCost = HouseSubclass.costToBuild();
@@ -82,6 +152,9 @@ export class GameIdle extends Game {
             }
             this.addBuilding(HouseSubclass);
         }
+    };
+    hasPassedAPeriod = (tick, periodInSec) => {
+        return (tick % ((1000 / this.gameFrequency) * periodInSec) === 0);
     };
     gameLoop = (tick) => {
         this.buildings.forEach(house => {

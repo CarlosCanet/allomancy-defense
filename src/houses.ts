@@ -1,6 +1,6 @@
 import { Building } from "./building.js";
-import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES, type Resource } from "./game.js";
-import type { ResourceMap } from "./gameIdle.js";
+import { METALS_RESOURCES, OTHER_RESOURCES, type Resource } from "./allomancyDefenseGame.js";
+import type { ResourceMap } from "./game.js";
 
 export interface HouseConstructor {
     new (...args: any[]): House;

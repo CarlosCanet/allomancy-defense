@@ -1,151 +1,99 @@
-import { GameIdle } from "./gameIdle.js";
-import { GameIncursion } from "./gameIncursion.js";
-import { HouseVenture } from "./houses.js";
+import { RESOURCES, type Resource } from "./allomancyDefenseGame.js";
+import type { Building } from "./building.js";
 
-export enum GameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
-export const METALS_RESOURCES = { STEEL: "Steel", BRONZE: "Bronze", COPPER: "Copper", TIN: "Tin" } as const;
-export const OTHER_RESOURCES = { COINS: "Coins" } as const;
-export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES } as const;
-// export const RESOURCES = [...Object.values(METALS_RESOURCES), ...Object.values(OTHER_RESOURCES)];
-export const RESOURCES = [...Object.values(ALL_RESOURCES)];
-export type Resource = (typeof RESOURCES)[number];
-export type Metal = (typeof METALS_RESOURCES)[keyof typeof METALS_RESOURCES];
-export const HOUSES = ["Venture", "Cett", "Lekal", "Hastings", "Elariel"];
+export type ResourceMap = Map<Resource, number>;
 
-export interface Screens {
-    startScreenNode: HTMLDivElement;
-    gameDefenseScreenNode: HTMLDivElement;
-    baseGameBoxNode: HTMLDivElement;
-    gameIncursionScreenNode: HTMLDivElement;
-    incursionGameBoxNode: HTMLDivElement;
-    gameOverScreenNode: HTMLDivElement;
+export class MenuSection {
+    sectionNode: HTMLDivElement;
+    titleNode: HTMLHeadElement;
+    listNode: HTMLUListElement;
+    liClassName: string;
+
+    constructor(title: string, liClassName: string) {
+        this.sectionNode = document.createElement("div");
+        this.titleNode = document.createElement("h2");
+        this.listNode = document.createElement("ul");
+        this.listNode.classList.add("ul-menu-list");
+        this.listNode.id = `${title}-ul`;
+        this.titleNode.innerText = title;
+        this.sectionNode.append(this.titleNode);
+        this.sectionNode.append(this.listNode);
+        this.liClassName = liClassName;
+    }
+
+    addElement = (elementId: string, elementText: string, amount: number, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
+        const newLiNode = document.createElement("li");
+        newLiNode.classList.add("listMenu");
+        newLiNode.classList.add(this.liClassName);
+        newLiNode.id = `${elementId}-btn`;
+        if (this.titleNode.innerText === "Resources") {
+            newLiNode.innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`
+        } else {
+            newLiNode.innerHTML = `<span>${elementText}</span> <span id="amount">${amount}</span>`;
+        }
+        if (event && eventHandler) {
+            newLiNode.addEventListener(event, eventHandler);  
+        }
+        this.listNode.append(newLiNode);
+    }
+
+    addElementWithIcon = (elementId: string, elementText: string, amount: number, iconSrc: string, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
+        const newLiNode = document.createElement("li");
+        newLiNode.classList.add("listMenu");
+        newLiNode.classList.add(this.liClassName);
+        newLiNode.id = `${elementId}-btn`;
+        newLiNode.innerHTML = `<img src="${iconSrc}"/><span>${elementText}</span> <span id="amount">${amount}</span>`;
+        if (event && eventHandler) {
+            newLiNode.addEventListener(event, eventHandler);  
+        }
+        this.listNode.append(newLiNode);
+    }
+
+    updateAmount = (elementName: string, amount: number) => {
+        const liNode = this.sectionNode.querySelector<HTMLLIElement>(`#${elementName}-btn #amount`);
+        if (liNode) {
+            liNode.innerText = `${Math.floor(amount)}`;            
+        }
+    }
 }
 
-export class Game {
-    // ATTRIBUTES
-    gameState: GameStates;
-    screenNodes: Screens;
+export abstract class Game {
+    gameBoxNode: HTMLDivElement;
+    menuNode: HTMLDivElement;
+    baseNode: HTMLDivElement;
+    baseButtonsNode: HTMLUListElement;
+    abstract resourcesMenuSectionNode: MenuSection;
     gameFrequency: number;
-    tick: number;
-    gameIntervalId: number;
-    gameIdle: GameIdle;
-    gameIncursion: GameIncursion | null;
-    startBtnNode: HTMLButtonElement;
-    preloadedImages: Array<HTMLImageElement>;
+    resources: ResourceMap;
+    buildings: Array<Building>;
+    
+    constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
+        this.gameBoxNode = gameBoxNode;
+        this.menuNode = document.createElement("div");
+        this.menuNode.classList.add("menu");
+        this.baseButtonsNode = document.createElement("ul");
+        this.baseButtonsNode.classList.add("menu-list");
+        this.baseNode = document.createElement("div");
+        
+        this.gameFrequency = gameFrequency;
+        this.resources = new Map();
+        this.buildings = [];
+    }
 
-    // METHODS
-    constructor(screens: Screens) {
-        this.gameState = GameStates.WaitingToStart;
-        this.screenNodes = screens;
-        this.startBtnNode = document.createElement("button");
-        this.startBtnNode.id = "start-btn";
-        this.startBtnNode.innerText = "Start game";
+    randomIntegerRange = (range: number, startValue: number) => Math.floor(Math.random() * range + startValue);
 
-        this.gameFrequency = Math.floor(1000 / 60);
-        this.tick = 0;
-        this.gameIntervalId = 0;
-        this.showStartScreen();
-
-        this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
-        this.gameIncursion = null;
-        this.preloadedImages = [];
-        for (let i = 0; i < 15; i++) {
-            const image = new Image();
-            image.src = `../images/houses/House03-${(i + 1).toString().padStart(2, "0")}.png`;
-            this.preloadedImages.push(image);
+    updateResourcesMenu = () => {
+        for (const resource of RESOURCES) {
+            const value = this.resources.get(resource);
+            if (value !== undefined) {
+                this.resourcesMenuSectionNode.updateAmount(resource, value);
+            }
         }
-        this.createStartUI();
     }
 
-    createStartUI = () => {
-        const imgNode = document.createElement("img");
-        imgNode.src = "https://placecats.com/500/300";
-        imgNode.width = 500;
-        imgNode.alt = "Logo";
-        this.screenNodes.startScreenNode.append(imgNode);
-        this.screenNodes.startScreenNode.append(this.startBtnNode);
-        this.startBtnNode.addEventListener("click", this.startGame);
+    hasPassedAPeriod = (tick: number, periodInSec: number): boolean => {
+        return (tick % ((1000 / this.gameFrequency) * periodInSec) === 0);
     }
 
-    startGame = () => {
-        this.gameState = GameStates.BaseBuilding;
-        this.gameIdle.createBaseUI();
-        this.showBaseScreen();
-        this.gameIntervalId = setInterval(this.gameLoop, this.gameFrequency);
-    };
-
-    startIncursion = () => {
-        this.gameState = GameStates.Incursioning;
-        this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle.resources);
-        this.gameIdle.shouldStartIncursion = false;
-        this.gameIncursion.createIncursionUI();
-        this.showIncursionScreen();
-    };
-
-    finishIncursion = () => {
-        this.gameIncursion = null;
-        this.showBaseScreen();
-    }
-
-    showStartScreen = () => {
-        this.screenNodes.startScreenNode.style.display = "flex";
-        this.screenNodes.gameDefenseScreenNode.style.display = "none";
-        this.screenNodes.gameIncursionScreenNode.style.display = "none";
-        this.screenNodes.gameOverScreenNode.style.display = "none";
-    };
-
-    showBaseScreen = () => {
-        this.screenNodes.startScreenNode.style.display = "none";
-        this.screenNodes.gameDefenseScreenNode.style.display = "flex";
-        this.screenNodes.gameIncursionScreenNode.style.display = "none";
-        this.screenNodes.gameOverScreenNode.style.display = "none";
-    };
-
-    showIncursionScreen = () => {
-        this.screenNodes.startScreenNode.style.display = "none";
-        this.screenNodes.gameDefenseScreenNode.style.display = "none";
-        this.screenNodes.gameIncursionScreenNode.style.display = "flex";
-        this.screenNodes.gameOverScreenNode.style.display = "none";
-    };
-
-    showGameOver = () => {
-        this.screenNodes.startScreenNode.style.display = "none";
-        this.screenNodes.gameDefenseScreenNode.style.display = "none";
-        this.screenNodes.gameIncursionScreenNode.style.display = "none";
-        this.screenNodes.gameOverScreenNode.style.display = "flex";
-    };
-
-    gameLoop = () => {
-        this.tick++;
-        switch (this.gameState) {
-            case GameStates.WaitingToStart:
-                break;
-            case GameStates.BaseBuilding:
-                this.gameIdle.gameLoop(this.tick);
-                if (this.gameIdle.shouldStartIncursion) {
-                    this.gameState = GameStates.Incursioning;
-                    this.startIncursion();
-                }
-                break;
-            case GameStates.Incursioning:
-                this.gameIncursion && this.gameIncursion.gameLoop(this.tick);
-                this.gameIncursion && this.gameIncursion.isIncursionOver && (this.gameState = GameStates.BaseBuilding) && this.finishIncursion();
-                break;
-            case GameStates.GameOver:
-                this.gameOver();
-                break;
-        }
-    };
-
-    gameOver = () => {
-        this.showGameOver();
-    };
-
-    // createBuilding = (building: Building) => {
-
-    // }
-
-    // recruitAlly = (ally: Character) => {
-
-    // }
+    abstract gameLoop(tick: number): void;
 }
