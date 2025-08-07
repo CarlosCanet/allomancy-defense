@@ -26,6 +26,7 @@ export class GameObject {
     }
 
     createSpriteArray = (urlImage: string, extImage: string, imagesNumber: number): void => {
+        this.spritesSrc.splice(0);
         for (let i = 0; i < imagesNumber; i++) {
             this.spritesSrc.push(`${urlImage}-${(i + 1).toString().padStart(2, "0")}.${extImage}`);
         }
@@ -71,10 +72,29 @@ export class GameObject {
     moveTowardsPoint = (pointX: number, pointY: number): void => {
         const [dx, dy] = [pointX - this.x, pointY - this.y];
         const module = Math.sqrt(dx * dx + dy * dy);
-        this.x += (dx / module) * this.speedX;
-        this.y += (dy / module) * this.speedY;
+        if (module < this.speedX || module < this.speedY) {
+            this.x = pointX;
+            this.y = pointY;
+            this.render();
+            return;
+        }
+        const ddx = ((dx / module) * this.speedX);
+        const ddy = ((dy/module) * this.speedY);
+        // console.log(this.x, pointX, ddx, dx, module, this.speedX);
+        this.x += ddx;
+        this.y += ddy
         this.render();
+
     };
+
+    /**
+     * Calculates the Manhattan distance between this object and another.
+     * @param otherObject The GameObject with to measure the distance to.
+     * @returns The Manhattan distance between the two objects.
+     */
+    distanceWith = (otherObject: GameObject): number => {
+        return Math.abs(this.x - otherObject.x) + Math.abs(this.y - otherObject.y);
+    }
 
     render = (tick?: number): void => {
         if (this.spritesSrc.length !== 0 && tick) {

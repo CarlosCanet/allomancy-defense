@@ -60,10 +60,18 @@
   padding: 20px;
   position: relative;
 
+  .timer {
+    color: white;
+    font-weight: 300;
+    font-size: 50px;
+    text-align: center;
+    font-family: "Rubik dirt";
+  }
+
   .static-buildings {
     position: absolute;
     pointer-events: none;
-    background-image: url("../images/houses/House15-06.png");
+    /* background-image: url("../images/houses/House15-06.png"); */
     background-size: cover;
   }
   
