@@ -62,6 +62,7 @@ export abstract class Game {
     menuNode: HTMLDivElement;
     baseNode: HTMLDivElement;
     baseButtonsNode: HTMLUListElement;
+    bgMusicNode: HTMLAudioElement;
     abstract resourcesMenuSectionNode: MenuSection;
     gameFrequency: number;
     resources: ResourceMap;
@@ -76,6 +77,7 @@ export abstract class Game {
         this.baseNode = document.createElement("div");
         
         this.gameFrequency = gameFrequency;
+        this.bgMusicNode = document.createElement("audio");
         this.resources = new Map();
         this.buildings = [];
     }

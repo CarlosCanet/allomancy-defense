@@ -54,6 +54,7 @@ export class Game {
     menuNode;
     baseNode;
     baseButtonsNode;
+    bgMusicNode;
     gameFrequency;
     resources;
     buildings;
@@ -65,6 +66,7 @@ export class Game {
         this.baseButtonsNode.classList.add("menu-list");
         this.baseNode = document.createElement("div");
         this.gameFrequency = gameFrequency;
+        this.bgMusicNode = document.createElement("audio");
         this.resources = new Map();
         this.buildings = [];
     }

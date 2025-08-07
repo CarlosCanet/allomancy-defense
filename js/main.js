@@ -19,7 +19,8 @@ const gameScreens = {
 // Other things
 // ** GLOBAL GAME VARIABLES ** //
 const allomancyGame = new AllomancyDefenseGame(gameScreens);
-allomancyGame.startGame();
+// allomancyGame.gameOver();
+// allomancyGame.startGame();
 // allomancyGame.startIncursion();
 // ** GLOBAL GAME FUNCTIONS ** //
 // ** EVENT LISTENERS ** //

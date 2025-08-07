@@ -8,6 +8,8 @@ export class Enemy extends Character {
         this.node.classList.add("enemy");
         this.node.style.width = `${w}px`;
         this.node.style.height = `${h}px`;
+        this.deathSFXNode.src = "../sfx/enemyDeath.mp3";
+        this.deathSFXNode.volume = 0.1;
         this.spawnEnemy();
     }
 
@@ -59,16 +61,10 @@ export class Enemy extends Character {
         this.x += this.speedX;
         // this.y += this.speedY;
 
-        this.node.innerText = this.distanceWith(this.gameIncursion.playerCharacter).toString();
-        this.node.style.color = "white";
-        this.node.style.fontSize = "2em";
-
         let player = this.gameIncursion.playerCharacter;
-        if (this.distanceWith(player) < 200) {
-                console.log("MUEVE");
+        if (this.distanceWith(player) < 120) {
             this.moveTowardsPoint(player.x, player.y);
-        }
-        else {
+        }else {
             if (this.speedX < 0) {
                 this.shouldBeDeleted = this.x + this.w < 0;
             } else if (this.speedX > 0) {
