@@ -30,7 +30,7 @@ export class Character extends GameObject {
     handleKeys = (event: KeyboardEvent) => {
         if (event.key === "w" || event.key === "ArrowUp") {
             this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkup", "png", 8);
-            this.moveUp(this.isPlayer);            
+            this.moveUp(this.isPlayer);
         } else if (event.key === "s" || event.key === "ArrowDown") {
             this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkdown", "png", 8);
             this.moveDown(this.isPlayer);

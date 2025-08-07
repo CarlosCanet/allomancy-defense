@@ -65,7 +65,11 @@ export class GameIncursion extends Game {
         for (const [resource, amount] of this.resources.entries()) {
             this.resourcesMenuSectionNode.addElement(resource, resource, amount);
         }
-        this.createBuildings();
+        // this.createBuildings();
+        this.bgMusicNode.src = "../sfx/backgroundMusic-incursion-Emmraan.mp3";
+        this.bgMusicNode.loop = true;
+        this.bgMusicNode.autoplay = true;
+        this.bgMusicNode.volume = 0.01;
         setTimeout(this.createArea, 100);
         setTimeout(this.createArea, this.randomIntegerRange(5000, 1000));
     };
