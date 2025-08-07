@@ -1,8 +1,8 @@
 import { Character } from "./character.js";
 export class Enemy extends Character {
     shouldBeDeleted = false;
-    constructor(w, h, gameBoxNode, speedX) {
-        super(0, 0, w, h, document.createElement("div"), gameBoxNode, speedX, 0, false);
+    constructor(w, h, gameBoxNode, speed, gameIncursion) {
+        super(0, 0, w, h, document.createElement("div"), gameBoxNode, speed, speed, false, gameIncursion);
         this.node.classList.add("enemy");
         this.node.style.width = `${w}px`;
         this.node.style.height = `${h}px`;
@@ -50,19 +50,29 @@ export class Enemy extends Character {
     };
     automaticMovement = (tick) => {
         this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.speedX < 0) {
-            this.shouldBeDeleted = this.x + this.w < 0;
+        // this.y += this.speedY;
+        this.node.innerText = this.distanceWith(this.gameIncursion.playerCharacter).toString();
+        this.node.style.color = "white";
+        this.node.style.fontSize = "2em";
+        let player = this.gameIncursion.playerCharacter;
+        if (this.distanceWith(player) < 200) {
+            console.log("MUEVE");
+            this.moveTowardsPoint(player.x, player.y);
         }
-        else if (this.speedX > 0) {
-            this.shouldBeDeleted = this.x > this.gameBoxNode.offsetWidth;
+        else {
+            if (this.speedX < 0) {
+                this.shouldBeDeleted = this.x + this.w < 0;
+            }
+            else if (this.speedX > 0) {
+                this.shouldBeDeleted = this.x > this.gameBoxNode.offsetWidth;
+            }
+            if (this.speedY < 0) {
+                this.shouldBeDeleted = this.y + this.h < 0;
+            }
+            else if (this.speedY > 0) {
+                this.shouldBeDeleted = this.y > this.gameBoxNode.offsetHeight;
+            }
+            this.render(tick);
         }
-        if (this.speedY < 0) {
-            this.shouldBeDeleted = this.y + this.h < 0;
-        }
-        else if (this.speedY > 0) {
-            this.shouldBeDeleted = this.y > this.gameBoxNode.offsetHeight;
-        }
-        this.render(tick);
     };
 }

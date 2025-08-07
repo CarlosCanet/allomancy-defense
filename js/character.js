@@ -1,11 +1,14 @@
+import { OTHER_RESOURCES } from "./allomancyDefenseGame.js";
 import { GameObject } from "./gameObject.js";
 import { Projectile } from "./projectile.js";
 export class Character extends GameObject {
     isPlayer;
     projectiles;
+    coinsPerShot;
     canShoot;
     timeBetweenShoots;
-    constructor(x, y, w, h, node, gameBoxNode, speedX, speedY, isPlayer) {
+    gameIncursion;
+    constructor(x, y, w, h, node, gameBoxNode, speedX, speedY, isPlayer, gameIncursion) {
         super(x, y, w, h, speedX, speedY, node, gameBoxNode);
         this.isPlayer = isPlayer;
         this.node.style.width = `${w}px`;
@@ -13,30 +16,39 @@ export class Character extends GameObject {
         this.node.classList.add("character");
         this.projectiles = [];
         this.canShoot = true;
+        this.coinsPerShot = 10;
         this.timeBetweenShoots = 300;
+        this.gameIncursion = gameIncursion;
         if (this.isPlayer) {
+            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkright", "png", 8);
             document.addEventListener("keydown", this.handleKeys);
             document.addEventListener("click", this.handleClick);
         }
     }
     handleKeys = (event) => {
         if (event.key === "w" || event.key === "ArrowUp") {
+            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkup", "png", 8);
             this.moveUp(this.isPlayer);
         }
         else if (event.key === "s" || event.key === "ArrowDown") {
+            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkdown", "png", 8);
             this.moveDown(this.isPlayer);
         }
         else if (event.key === "a" || event.key === "ArrowLeft") {
+            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkleft", "png", 8);
             this.moveLeft(this.isPlayer);
         }
         else if (event.key === "d" || event.key === "ArrowRight") {
+            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkright", "png", 8);
             this.moveRight(this.isPlayer);
         }
     };
     handleClick = (event) => {
-        if (this.canShoot) {
+        const coins = this.gameIncursion.resources.get(OTHER_RESOURCES.COINS);
+        if (this.canShoot && coins >= this.coinsPerShot) {
             this.createProjectile(event.layerX, event.layerY);
             this.canShoot = false;
+            this.gameIncursion.resources.set(OTHER_RESOURCES.COINS, coins - this.coinsPerShot);
             setTimeout(() => this.canShoot = true, this.timeBetweenShoots);
         }
     };
