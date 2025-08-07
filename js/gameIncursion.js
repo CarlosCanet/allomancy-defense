@@ -68,7 +68,7 @@ export class GameIncursion extends Game {
         // this.createBuildings();
         this.bgMusicNode.src = "../sfx/backgroundMusic-incursion-Emmraan.mp3";
         this.bgMusicNode.loop = true;
-        this.bgMusicNode.autoplay = true;
+        // this.bgMusicNode!.autoplay = true;
         this.bgMusicNode.volume = 0.01;
         setTimeout(this.createArea, 100);
         setTimeout(this.createArea, this.randomIntegerRange(5000, 1000));
@@ -140,6 +140,7 @@ export class GameIncursion extends Game {
             projectile.moveTowardsTarget();
             this.enemies.forEach((enemy, index) => {
                 if (projectile.isCollidingWith(enemy)) {
+                    enemy.deathSFXNode.play();
                     enemy.node.remove();
                     this.enemies.splice(index, 1);
                 }
@@ -164,6 +165,7 @@ export class GameIncursion extends Game {
             if (enemy.isCollidingWith(this.playerCharacter)) {
                 this.isIncursionOver = true;
                 this.isPlayerCaught = true;
+                this.playerCharacter.deathSFXNode.play();
             }
         });
         this.checkDespawnEnemy();

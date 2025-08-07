@@ -8,6 +8,8 @@ export class Enemy extends Character {
         this.node.classList.add("enemy");
         this.node.style.width = `${w}px`;
         this.node.style.height = `${h}px`;
+        this.deathSFXNode.src = "../sfx/enemyDeath.mp3";
+        this.deathSFXNode.volume = 0.1;
         this.spawnEnemy();
     }
 

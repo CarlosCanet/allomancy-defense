@@ -17,6 +17,7 @@ export class GameIncursion extends Game{
     gameTimer: number;
     gameTimerNode: HTMLDivElement;
     gameTimerInterval: number;
+
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number, resources: ResourceMap) {
         super(gameBoxNode, gameFrequency);
         this.menuNode.classList.add("menu");
@@ -39,6 +40,8 @@ export class GameIncursion extends Game{
         this.baseNode.append(this.playerCharacter.node);
         this.playerCharacter.render();
         document.addEventListener("keydown", this.handleKeyboardEvents);
+
+        
 
         this.gameTimerNode = document.createElement("div");
         this.gameTimerNode.classList.add("timer");
@@ -75,7 +78,7 @@ export class GameIncursion extends Game{
 
         this.bgMusicNode!.src = "../sfx/backgroundMusic-incursion-Emmraan.mp3";
         this.bgMusicNode!.loop = true;
-        this.bgMusicNode!.autoplay = true;
+        // this.bgMusicNode!.autoplay = true;
         this.bgMusicNode!.volume = 0.01;
 
         setTimeout(this.createArea, 100);
@@ -156,6 +159,7 @@ export class GameIncursion extends Game{
             projectile.moveTowardsTarget()
             this.enemies.forEach((enemy, index) => {
                 if (projectile.isCollidingWith(enemy)) {
+                    enemy.deathSFXNode.play();
                     enemy.node.remove();
                     this.enemies.splice(index, 1);
                 }
@@ -182,6 +186,7 @@ export class GameIncursion extends Game{
             if (enemy.isCollidingWith(this.playerCharacter)) {
                 this.isIncursionOver = true;
                 this.isPlayerCaught = true;
+                this.playerCharacter.deathSFXNode.play();
             }
         });
         this.checkDespawnEnemy();
