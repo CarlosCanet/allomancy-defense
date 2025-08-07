@@ -62,8 +62,8 @@ export class GameIncursion extends Game {
         this.menuNode.append(this.baseButtonsNode);
         this.baseButtonsNode.append(this.resourcesMenuSectionNode.sectionNode);
         this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);
-        for (const [key, value] of this.resources.entries()) {
-            this.resourcesMenuSectionNode.addElement(key, key, value);
+        for (const [resource, amount] of this.resources.entries()) {
+            this.resourcesMenuSectionNode.addElement(resource, resource, amount);
         }
         this.createBuildings();
         setTimeout(this.createArea, 100);

@@ -128,8 +128,17 @@ export class AllomancyDefenseGame {
                 }
                 break;
             case GameStates.Incursioning:
-                this.gameIncursion && this.gameIncursion.gameLoop(this.tick);
-                this.gameIncursion && this.gameIncursion.isIncursionOver && (this.gameState = GameStates.BaseBuilding) && this.finishIncursion();
+                if (this.gameIncursion) {
+                    this.gameIncursion.gameLoop(this.tick);
+                    if (this.gameIncursion.isIncursionOver) {
+                        if (this.gameIncursion.isPlayerCaught) {
+                            this.gameIdle.penalty(1);
+                        }
+                        this.gameState = GameStates.BaseBuilding;
+                        this.finishIncursion();
+                    }
+                }
+                
                 break;
             case GameStates.GameOver:
                 this.gameOver();
@@ -140,12 +149,4 @@ export class AllomancyDefenseGame {
     gameOver = () => {
         this.showGameOver();
     };
-
-    // createBuilding = (building: Building) => {
-
-    // }
-
-    // recruitAlly = (ally: Character) => {
-
-    // }
 }

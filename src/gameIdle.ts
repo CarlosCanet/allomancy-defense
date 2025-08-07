@@ -71,8 +71,8 @@ export class GameIdle extends Game {
     canBuyBuilding = (HouseSubclass: HouseConstructor): boolean => {
         let canBuy = true;
         const resourcesCost = HouseSubclass.costToBuild();
-        for (const [key, value] of resourcesCost) {
-            if (value > this.resources.get(key)!) {
+        for (const [resource, amount] of resourcesCost) {
+            if (amount > this.resources.get(resource)!) {
                 canBuy = false;
                 break;
             }
@@ -83,13 +83,24 @@ export class GameIdle extends Game {
     buyBuilding = (HouseSubclass: HouseConstructor): void => {
         if (this.canBuyBuilding(HouseSubclass)) {
             const resourcesCost = HouseSubclass.costToBuild();
-            for (const [key, value] of resourcesCost.entries()) {
-                const myResourcesValue = this.resources.get(key);
+            for (const [resource, amount] of resourcesCost.entries()) {
+                const myResourcesValue = this.resources.get(resource);
                 if (myResourcesValue !== undefined) {
-                    this.resources.set(key, myResourcesValue - value);
+                    this.resources.set(resource, myResourcesValue - amount);
                 }
             }
             this.addBuilding(HouseSubclass);
+        }
+    }
+
+    penalty = (penaltyLevel: number): void => {
+        for (let i = 0; i < penaltyLevel; i++) {
+            let building2Remove = this.buildings.pop();
+            building2Remove && building2Remove.node.remove();
+        }
+        for (const [resource, amount] of this.resources) {
+            let newAmount = amount / 3 * penaltyLevel;
+            this.resources.set(resource, newAmount < 0 ? 0 : newAmount);
         }
     }
 
