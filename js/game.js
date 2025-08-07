@@ -24,6 +24,7 @@ export class Game {
     gameIdle;
     gameIncursion;
     startBtnNode;
+    preloadedImages;
     // METHODS
     constructor(screens) {
         this.gameState = GameStates.WaitingToStart;
@@ -37,6 +38,12 @@ export class Game {
         this.showStartScreen();
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
         this.gameIncursion = null;
+        this.preloadedImages = [];
+        for (let i = 0; i < 15; i++) {
+            const image = new Image();
+            image.src = `../images/houses/House03-${(i + 1).toString().padStart(2, "0")}.png`;
+            this.preloadedImages.push(image);
+        }
         this.createStartUI();
     }
     createStartUI = () => {

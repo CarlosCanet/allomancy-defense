@@ -1,75 +1,126 @@
 #incursion-game-box {
-    flex-direction: column;
+  flex-direction: column;
+  background-image: url("../images/Bg3.jpeg");
+  background-size: cover;
 }
 
 #menu-incursion {
-  background-color:mediumvioletred;
+  opacity: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  height: 10%;
+  height: 15%;
   padding: 20px;
+
+  backdrop-filter: brightness(75%) sepia(100%) hue-rotate(280deg);
+  font-family: "Rubik dirt";
 
   #menu-incursion-list {
     display: flex;
     width: 100%;
     justify-content: space-around;
+
+    .resources-li{
+          padding: 3px 20px 3px 20px;
+          min-width: 110px;
+          /* background-color: cadetblue; */
+          
+          border: solid 2px rgba(50, 50, 50, 0.9);
+          background-size: cover;
+          border-radius: 25px;
+          display: flex;
+          gap: 5px;
+          justify-content: space-between;
+          align-items: center;
+
+          &#Steel-btn{
+            background-image: url("../images/resources/Bg-resource-steel.png");
+          }
+          &#Bronze-btn{
+            background-image: url("../images/resources/Bg-resource-bronze.png");
+          }
+          &#Copper-btn{
+            background-image: url("../images/resources/Bg-resource-copper.png");
+          }
+          &#Tin-btn{
+            background-image: url("../images/resources/Bg-resource-tin.png");
+          }
+          &#Coins-btn{
+            background-image: url("../images/resources/Bg-resource-coins.png");
+          }
+        }
+
   }
 }
 
 
 #incursion-ui {
-  background-color:darkslategrey;
   height: 100%;
   padding: 20px;
   position: relative;
-}
 
-.ul-menu-list {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 10px;
-    gap: 20px;
+  .static-buildings {
+    position: absolute;
+    pointer-events: none;
+    background-image: url("../images/houses/House15-06.png");
+    background-size: cover;
+  }
+  
+  
+  .area-producer {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 100%;
+    text-align: center;
     color: white;
-}
+    font-weight: 800;
+    filter: blur(20px);
+    opacity: 50%;
+    
+    &.Steel-producer{
+      background-color: rgb(139, 157, 173);
+    }
+    &.Bronze-producer{
+      background-color: orange;
+    }
+    &.Copper-producer{
+      background-color: rgb(255, 106, 51);
+    }
+    &.Tin-producer{
+      background-color: lightslategray;
+    }
+    &.Coins-producer{
+      background-color: yellow;
+    }
+  }
 
-.static-buildings {
-  position: absolute;
-  pointer-events: none;
-}
-
-
-.area-producer {
-  position: absolute;
-  border: solid 3px red;
-  border-radius: 40%;
-  text-align: center;
-  color: white;
-  font-weight: 800;
-}
-
-#player-character {
-  position: absolute;
-  background-color: black;
-  /* transform: rotate(45deg); */
-  color: white;
-  font-size: 0.6em;
-  z-index: 1;
-}
-
-.enemy {
-  position: absolute;
-  background-color: red;
-  border-radius: 50%;
-  text-align: center;
-  pointer-events: none;
-}
-
-.projectile {
-  position: absolute;
-  background-color: orange;
-  border-radius: 50%;
-  z-index: 2;
+  /* .character {
+    border: solid 2px red;
+  } */
+  
+  #player-character {
+    position: absolute;
+    background-image: url("../images/characters/adventurerFemale/adventurerFemale41.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* font-size: 0.6em; */
+    z-index: 1;
+  }
+  
+  .enemy {
+    position: absolute;
+    /* background-image: url("../images/characters/guard/soldier00.png"); */
+    background-size: contain;
+    background-repeat: no-repeat;
+    text-align: center;
+    pointer-events: none;
+  }
+  
+  .projectile {
+    position: absolute;
+    background-color: orange;
+    border-radius: 50%;
+    z-index: 2;
+  }
 }

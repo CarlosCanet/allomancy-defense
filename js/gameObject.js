@@ -8,6 +8,8 @@ export class GameObject {
     speedY;
     node;
     gameBoxNode;
+    spritesSrc;
+    spriteTicks;
     // METHODS
     constructor(x, y, w, h, speedX, speedY, node, gameBoxNode) {
         this.x = x;
@@ -18,7 +20,14 @@ export class GameObject {
         this.speedY = speedY;
         this.node = node;
         this.gameBoxNode = gameBoxNode;
+        this.spritesSrc = [];
+        this.spriteTicks = 20;
     }
+    createSpriteArray = (urlImage, extImage, imagesNumber) => {
+        for (let i = 0; i < imagesNumber; i++) {
+            this.spritesSrc.push(`${urlImage}-${(i + 1).toString().padStart(2, "0")}.${extImage}`);
+        }
+    };
     moveUp = (isContained) => {
         this.y -= this.speedY;
         isContained && this.containObject();
@@ -56,10 +65,16 @@ export class GameObject {
         const [dx, dy] = [pointX - this.x, pointY - this.y];
         const module = Math.sqrt(dx * dx + dy * dy);
         this.x += (dx / module) * this.speedX;
-        this.y += dy / module * this.speedY;
+        this.y += (dy / module) * this.speedY;
         this.render();
     };
-    render = () => {
+    render = (tick) => {
+        if (this.spritesSrc.length !== 0 && tick) {
+            const newURL = `url("${this.spritesSrc[Math.floor(tick / this.spriteTicks * Math.max(this.speedX, this.speedY)) % this.spritesSrc.length]}")`;
+            if (newURL !== this.node.style.backgroundImage) {
+                this.node.style.backgroundImage = newURL;
+            }
+        }
         this.node.style.top = `${this.y}px`;
         this.node.style.left = `${this.x}px`;
     };

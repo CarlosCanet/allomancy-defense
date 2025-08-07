@@ -8,6 +8,8 @@ export class GameObject {
     speedY: number;
     node: HTMLDivElement;
     gameBoxNode: HTMLDivElement;
+    spritesSrc: Array<string>;
+    spriteTicks: number;
 
     // METHODS
     constructor(x: number, y: number, w: number, h: number, speedX: number, speedY: number, node: HTMLDivElement, gameBoxNode: HTMLDivElement) {
@@ -19,7 +21,15 @@ export class GameObject {
         this.speedY = speedY;
         this.node = node;
         this.gameBoxNode = gameBoxNode;
+        this.spritesSrc = [];
+        this.spriteTicks = 20;
     }
+
+    createSpriteArray = (urlImage: string, extImage: string, imagesNumber: number): void => {
+        for (let i = 0; i < imagesNumber; i++) {
+            this.spritesSrc.push(`${urlImage}-${(i + 1).toString().padStart(2, "0")}.${extImage}`);
+        }
+    };
 
     moveUp = (isContained: boolean): void => {
         this.y -= this.speedY;
@@ -62,11 +72,17 @@ export class GameObject {
         const [dx, dy] = [pointX - this.x, pointY - this.y];
         const module = Math.sqrt(dx * dx + dy * dy);
         this.x += (dx / module) * this.speedX;
-        this.y += dy / module * this.speedY;
+        this.y += (dy / module) * this.speedY;
         this.render();
     };
 
-    render = () => {
+    render = (tick?: number): void => {
+        if (this.spritesSrc.length !== 0 && tick) {
+            const newURL = `url("${this.spritesSrc[Math.floor(tick / this.spriteTicks * Math.max(this.speedX, this.speedY)) % this.spritesSrc.length]!}")`;
+            if (newURL !== this.node.style.backgroundImage) {
+                this.node.style.backgroundImage = newURL;
+            }
+        }
         this.node.style.top = `${this.y}px`;
         this.node.style.left = `${this.x}px`;
     };

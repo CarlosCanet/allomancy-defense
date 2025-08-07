@@ -20,6 +20,6 @@ const gameScreens = {
 // ** GLOBAL GAME VARIABLES ** //
 const allomancyGame = new Game(gameScreens);
 allomancyGame.startGame();
-allomancyGame.startIncursion();
+// allomancyGame.startIncursion();
 // ** GLOBAL GAME FUNCTIONS ** //
 // ** EVENT LISTENERS ** //

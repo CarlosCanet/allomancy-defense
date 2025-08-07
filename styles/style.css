@@ -1,6 +1,18 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("../images/Bg3.jpeg");
+  background-size: auto;
+  background-position: center center;
+  filter: blur(2px);
+  z-index: -1;
 }
 
 .container {
@@ -8,7 +20,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 50px;
+  margin: 25px 50px;
 }
 
 .game-box {
@@ -25,7 +37,12 @@
 }
 
 h1 {
-    text-align: center;
+  padding-top: 25px;
+  text-align: center;
+  font-family: "Rubik dirt";
+  color: lightcyan;
+  font-weight: 500;
+  font-size: 3em;
 }
 
 .menu{
@@ -45,4 +62,15 @@ h2{
 ul {
   list-style: none;
   padding: 0;
+}
+
+.ul-menu-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 0.4em;
+    color: white;
 }

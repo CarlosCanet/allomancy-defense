@@ -30,8 +30,8 @@ export class GameIncursion {
         this.baseButtonsNode.id = "menu-incursion-list";
         this.baseNode = document.createElement("div");
         this.baseNode.id = "incursion-ui";
-        this.resourcesMenuSectionNode = new MenuSection("Resources");
-        this.alliesMenuSectionNode = new MenuSection("Allies");
+        this.resourcesMenuSectionNode = new MenuSection("Resources", "resources-li");
+        this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");
         this.gameFrequency = gameFrequency;
         this.resources = resources;
         this.buildings = [];
@@ -40,9 +40,8 @@ export class GameIncursion {
         this.progressLevel = 1;
         this.isIncursionOver = false;
         this.isPlayerCaught = false;
-        this.playerCharacter = new Character(30, 40, 50, 50, document.createElement("div"), this.baseNode, 10, 10, true);
+        this.playerCharacter = new Character(30, 40, 24, 48, document.createElement("div"), this.baseNode, 10, 10, true);
         this.playerCharacter.node.id = "player-character";
-        this.playerCharacter.node.innerText = "PLAYER";
         this.baseNode.append(this.playerCharacter.node);
         this.playerCharacter.render();
         document.addEventListener("keydown", this.handleKeyboardEvents);
@@ -95,6 +94,7 @@ export class GameIncursion {
         newArea.node.style.width = `${newArea.w}px`;
         newArea.node.style.height = `${newArea.h}px`;
         newArea.node.classList.add("area-producer");
+        newArea.node.classList.add(`${resourceToGenerate}-producer`);
         newArea.node.innerText = resourceToGenerate;
         newArea.render();
         this.producerAreas.push(newArea);
@@ -122,7 +122,7 @@ export class GameIncursion {
         return tick % ((1000 / this.gameFrequency) * periodInSec) === 0;
     };
     spawnEnemy = () => {
-        this.enemies.push(new Enemy(50, 50, this.baseNode, this.randomIntegerRange(4, 1)));
+        this.enemies.push(new Enemy(32, 53, this.baseNode, this.randomIntegerRange(4, 1)));
     };
     checkDespawnEnemy = () => {
         if (this.enemies[0]?.shouldBeDeleted) {
@@ -132,7 +132,7 @@ export class GameIncursion {
     };
     gameLoop = (tick) => {
         // Player and its projectiles
-        this.playerCharacter.render();
+        this.playerCharacter.render(tick);
         this.playerCharacter.projectiles.forEach(projectile => {
             projectile.moveTowardsTarget();
             this.enemies.forEach((enemy, index) => {
@@ -157,7 +157,7 @@ export class GameIncursion {
             this.spawnEnemy();
         }
         this.enemies.forEach((enemy) => {
-            enemy.automaticMovement();
+            enemy.automaticMovement(tick);
             if (enemy.isCollidingWith(this.playerCharacter)) {
                 this.isIncursionOver = true;
                 this.isPlayerCaught = true;

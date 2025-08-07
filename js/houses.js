@@ -22,7 +22,7 @@ export class House extends Building {
         let totalCost = new Map();
         const baseCost = 20;
         const coefficient = 3.5;
-        totalCost.set(OTHER_RESOURCES.COINS, baseCost * (coefficient ** this.howManyBuildings));
+        totalCost.set(OTHER_RESOURCES.COINS, baseCost * coefficient ** this.howManyBuildings);
         return totalCost;
     }
 }
@@ -31,6 +31,7 @@ export class HouseVenture extends House {
     static howManyBuildings = 0;
     constructor(node, gameBoxNode) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Venture Building`, METALS_RESOURCES.STEEL, 0, 2);
+        this.createSpriteArray("../images/houses/House03", "png", 15);
     }
 }
 export class HouseCett extends House {
@@ -38,6 +39,7 @@ export class HouseCett extends House {
     static howManyBuildings = 0;
     constructor(node, gameBoxNode) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Cett Building`, OTHER_RESOURCES.COINS, 0, 1);
+        this.createSpriteArray("../images/houses/House05", "png", 15);
     }
 }
 export class HouseLekal extends House {
@@ -45,6 +47,7 @@ export class HouseLekal extends House {
     static howManyBuildings = 0;
     constructor(node, gameBoxNode) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Lekal Building`, METALS_RESOURCES.TIN, 0, 1);
+        this.createSpriteArray("../images/houses/House01", "png", 1);
     }
 }
 export class HouseHasting extends House {
@@ -52,6 +55,7 @@ export class HouseHasting extends House {
     static howManyBuildings = 0;
     constructor(node, gameBoxNode) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Hasting Building`, METALS_RESOURCES.BRONZE, 0, 1);
+        this.createSpriteArray("../images/houses/House04", "png", 1);
     }
 }
 export class HouseElariel extends House {
@@ -59,5 +63,6 @@ export class HouseElariel extends House {
     static howManyBuildings = 0;
     constructor(node, gameBoxNode) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Elariel Building`, METALS_RESOURCES.COPPER, 0, 1);
+        this.createSpriteArray("../images/houses/House02", "png", 1);
     }
 }

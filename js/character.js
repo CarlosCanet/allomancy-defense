@@ -10,6 +10,7 @@ export class Character extends GameObject {
         this.isPlayer = isPlayer;
         this.node.style.width = `${w}px`;
         this.node.style.height = `${h}px`;
+        this.node.classList.add("character");
         this.projectiles = [];
         this.canShoot = true;
         this.timeBetweenShoots = 300;

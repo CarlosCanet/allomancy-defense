@@ -9,8 +9,9 @@ export class MenuSection {
     sectionNode: HTMLDivElement;
     titleNode: HTMLHeadElement;
     listNode: HTMLUListElement;
+    liClassName: string;
 
-    constructor(title: string) {
+    constructor(title: string, liClassName: string) {
         this.sectionNode = document.createElement("div");
         this.titleNode = document.createElement("h2");
         this.listNode = document.createElement("ul");
@@ -19,13 +20,31 @@ export class MenuSection {
         this.titleNode.innerText = title;
         this.sectionNode.append(this.titleNode);
         this.sectionNode.append(this.listNode);
+        this.liClassName = liClassName;
     }
 
     addElement = (elementId: string, elementText: string, amount: number, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
         const newLiNode = document.createElement("li");
         newLiNode.classList.add("listMenu");
+        newLiNode.classList.add(this.liClassName);
         newLiNode.id = `${elementId}-btn`;
-        newLiNode.innerHTML = `${elementText} <span>${amount}</span>`;
+        if (this.titleNode.innerText === "Resources") {
+            newLiNode.innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`
+        } else {
+            newLiNode.innerHTML = `<span>${elementText}</span> <span id="amount">${amount}</span>`;
+        }
+        if (event && eventHandler) {
+            newLiNode.addEventListener(event, eventHandler);  
+        }
+        this.listNode.append(newLiNode);
+    }
+
+    addElementWithIcon = (elementId: string, elementText: string, amount: number, iconSrc: string, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
+        const newLiNode = document.createElement("li");
+        newLiNode.classList.add("listMenu");
+        newLiNode.classList.add(this.liClassName);
+        newLiNode.id = `${elementId}-btn`;
+        newLiNode.innerHTML = `<img src="${iconSrc}"/><span>${elementText}</span> <span id="amount">${amount}</span>`;
         if (event && eventHandler) {
             newLiNode.addEventListener(event, eventHandler);  
         }
@@ -33,7 +52,7 @@ export class MenuSection {
     }
 
     updateAmount = (elementName: string, amount: number) => {
-        const liNode = this.sectionNode.querySelector<HTMLLIElement>(`#${elementName}-btn span`);
+        const liNode = this.sectionNode.querySelector<HTMLLIElement>(`#${elementName}-btn #amount`);
         if (liNode) {
             liNode.innerText = `${Math.floor(amount)}`;            
         }
@@ -64,9 +83,9 @@ export class GameIdle {
         this.baseButtonsNode.id = "menu-base-list";
         this.baseNode = document.createElement("div");
         this.baseNode.id = "base-ui";
-        this.resourcesMenuSectionNode = new MenuSection("Resources");
-        this.buildingsMenuSectionNode = new MenuSection("Buildings");
-        this.alliesMenuSectionNode = new MenuSection("Allies");
+        this.resourcesMenuSectionNode = new MenuSection("Resources", "resources-li");
+        this.buildingsMenuSectionNode = new MenuSection("Buildings", "buildings-li");
+        this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");
         this.startIncursionBtnNode = document.createElement("button");
 
         this.gameFrequency = gameFrequency;
@@ -156,6 +175,7 @@ export class GameIdle {
 
     gameLoop = (tick: number): void => {
         this.buildings.forEach(house => {
+            house.render(tick);
             if (this.hasPassedAPeriod(tick, house.periodInSec)) {
                 let amount = this.resources.get(house.resource);
                 if (amount !== undefined) {
