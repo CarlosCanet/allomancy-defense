@@ -57,6 +57,7 @@ export class GameIdle extends Game {
             let houseClassName = localStorage.getItem(`building-${index}`);
             if (houseClassName) {
                 const HouseClass = HousesMap[houseClassName];
+                HouseClass!.howManyBuildings++;
                 this.addBuilding(HouseClass!);
             }
         }
@@ -91,7 +92,7 @@ export class GameIdle extends Game {
             this.buildingsMenuSectionNode.updateAmount(`${HouseSubclass.getHouseName()}`, HouseSubclass.howManyBuildings);
             const buildingTitle = this.buildingsMenuSectionNode.titleNode.innerText.split(" ")[0];
             this.buildingsMenuSectionNode.titleNode.innerText = `${buildingTitle} (${this.buildings.length}/16)`;
-            this.buildingsMenuSectionNode.updateResourcesCost(buildingTitle!, HouseSubclass.costToBuild(), this.resources);
+            this.buildingsMenuSectionNode.createResourcesCost(newBuilding.constructor.name, HouseSubclass.costToBuild(), this.resources);
         }
     }
 

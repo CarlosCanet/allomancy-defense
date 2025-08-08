@@ -101,7 +101,6 @@ export class AllomancyDefenseGame {
         this.startBtnNode.addEventListener("click", this.startGame);
         this.continueBtnNode.addEventListener("click", this.startIdleGame);
         this.newGameBtnNode.addEventListener("click", () => {
-            console.log("Hola");
             localStorage.clear();
             this.startIdleGame();
         });

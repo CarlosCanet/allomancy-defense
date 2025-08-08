@@ -56,6 +56,10 @@ export class MenuSection {
     };
     createResourcesCost = (buildingId, costResources, actualResources) => {
         const buildingListNode = document.querySelector(`#${buildingId}-cost`);
+        buildingListNode && this.createListResources(buildingListNode, costResources, actualResources);
+    };
+    createListResources = (ulNode, costResources, actualResources) => {
+        ulNode.innerHTML = "";
         for (const [resource, amount] of actualResources) {
             let liNode = document.createElement("li");
             let resourceImg = document.createElement("img");
@@ -70,26 +74,7 @@ export class MenuSection {
             amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
             liNode.append(resourceImg);
             liNode.append(amountSpan);
-            buildingListNode?.append(liNode);
-        }
-    };
-    updateResourcesCost = (buildingId, costResources, actualResources) => {
-        const buildingListNode = document.querySelector(`#${buildingId}-cost`);
-        for (const [resource, amount] of actualResources) {
-            let liNode = document.querySelector("li");
-            let resourceImg = document.querySelector("img");
-            let amountSpan = document.querySelector("span");
-            if (liNode && resourceImg && amountSpan) {
-                let costAmount = costResources.get(resource);
-                (costAmount === undefined) && (costAmount = 0);
-                if (costAmount > amount) {
-                    liNode.classList.add("missing");
-                }
-                else {
-                    liNode.classList.remove("missing");
-                }
-                amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
-            }
+            ulNode.append(liNode);
         }
     };
 }
