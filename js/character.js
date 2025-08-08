@@ -22,34 +22,34 @@ export class Character extends GameObject {
         this.timeBetweenShoots = 300;
         this.gameIncursion = gameIncursion;
         this.coinSFXNode = document.createElement("audio");
-        this.coinSFXNode.src = "../sfx/coinDrop-CrunchpixStudio.mp3";
+        this.coinSFXNode.src = "./sfx/coinDrop-CrunchpixStudio.mp3";
         this.coinSFXNode.volume = 0.1;
         this.deathSFXNode = document.createElement("audio");
-        this.deathSFXNode.src = "../sfx/playerDeath.mp3";
+        this.deathSFXNode.src = "./sfx/playerDeath.mp3";
         this.deathSFXNode.volume = 0.4;
         this.gameBoxNode.append(this.coinSFXNode);
         this.gameBoxNode.append(this.deathSFXNode);
         if (this.isPlayer) {
-            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkright", "png", 8);
+            this.createSpriteArray("./images/characters/adventurerFemale/adventurerFemale-walkright", "png", 8);
             document.addEventListener("keydown", this.handleKeys);
             document.addEventListener("click", this.handleClick);
         }
     }
     handleKeys = (event) => {
         if (event.key === "w" || event.key === "ArrowUp") {
-            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkup", "png", 8);
+            this.createSpriteArray("./images/characters/adventurerFemale/adventurerFemale-walkup", "png", 8);
             this.moveUp(this.isPlayer);
         }
         else if (event.key === "s" || event.key === "ArrowDown") {
-            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkdown", "png", 8);
+            this.createSpriteArray("./images/characters/adventurerFemale/adventurerFemale-walkdown", "png", 8);
             this.moveDown(this.isPlayer);
         }
         else if (event.key === "a" || event.key === "ArrowLeft") {
-            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkleft", "png", 8);
+            this.createSpriteArray("./images/characters/adventurerFemale/adventurerFemale-walkleft", "png", 8);
             this.moveLeft(this.isPlayer);
         }
         else if (event.key === "d" || event.key === "ArrowRight") {
-            this.createSpriteArray("../images/characters/adventurerFemale/adventurerFemale-walkright", "png", 8);
+            this.createSpriteArray("./images/characters/adventurerFemale/adventurerFemale-walkright", "png", 8);
             this.moveRight(this.isPlayer);
         }
     };

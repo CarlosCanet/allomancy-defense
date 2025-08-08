@@ -70,7 +70,7 @@ export class GameIncursion extends Game {
             this.resourcesMenuSectionNode.addElement(resource, resource, amount);
         }
         // this.createBuildings();
-        this.bgMusicNode.src = "../sfx/backgroundMusic-incursion-Emmraan.mp3";
+        this.bgMusicNode.src = "./sfx/backgroundMusic-incursion-Emmraan.mp3";
         this.bgMusicNode.loop = true;
         // this.bgMusicNode!.autoplay = true;
         this.bgMusicNode.volume = 0.01;
