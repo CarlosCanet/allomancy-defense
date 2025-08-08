@@ -111,7 +111,7 @@
     color: white;
     font-weight: 800;
     filter: blur(20px);
-    opacity: 50%;
+    opacity: 90%;
     
     &.Steel-producer{
       background-color: rgb(139, 157, 173);

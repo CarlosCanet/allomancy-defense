@@ -154,7 +154,8 @@ export class GameIdle extends Game {
                     let secondsGenerating = this.ticksGeneratingIteration / 1000 * this.gameFrequency;
                     let penaltyRate = house.amountRate / this.maxSecondsUntilIncursion * secondsGenerating;
                     let rate = house.amountRate - penaltyRate;
-                    this.resources.set(house.resource, amount + ((rate < 0) ? 0 : rate));
+                    rate = (rate < 0) ? 0 : rate;
+                    this.resources.set(house.resource, amount + rate);
                     this.updateRateBuilding(house, rate);
                 }
             }

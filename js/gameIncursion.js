@@ -42,7 +42,7 @@ export class GameIncursion extends Game {
         this.gameTimerNode = document.createElement("div");
         this.gameTimerNode.classList.add("timer");
         this.baseNode.append(this.gameTimerNode);
-        const incursionDuration = 50000;
+        const incursionDuration = this.randomIntegerRange(20, 50) * 1000;
         this.gameTimer = incursionDuration / 1000;
         this.gameTimerInterval = setInterval(() => this.gameTimer--, 1000);
         setTimeout(() => {
