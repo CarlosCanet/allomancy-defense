@@ -37,35 +37,41 @@
             height: 30px;
         }
 
-        .resources-li{
-          padding: 3px 10px 0px 10px;
-          min-width: 110px;
-          /* background-color: cadetblue; */
+        #Resources-ul{
           
-          border: solid 2px rgba(50, 50, 50, 0.9);
-          background-size: cover;
-          border-radius: 25px;
-          display: flex;
-          gap: 5px;
-          justify-content: space-between;
-          align-items: center;
 
-          &#Steel-btn{
-            background-image: url("../images/resources/Bg-resource-steel.png");
-          }
-          &#Bronze-btn{
-            background-image: url("../images/resources/Bg-resource-bronze.png");
-          }
-          &#Copper-btn{
-            background-image: url("../images/resources/Bg-resource-copper.png");
-          }
-          &#Tin-btn{
-            background-image: url("../images/resources/Bg-resource-tin.png");
-          }
-          &#Coins-btn{
-            background-image: url("../images/resources/Bg-resource-coins.png");
+          .resources-li{
+            padding: 3px 10px 0px 10px;
+            width: 120px;
+            font-size: 0.85em;
+            /* background-color: cadetblue; */
+            
+            border: solid 2px rgba(50, 50, 50, 0.9);
+            background-size: cover;
+            border-radius: 25px;
+            display: flex;
+            gap: 5px;
+            justify-content: space-between;
+            align-items: center;
+  
+            &#Steel-btn{
+              background-image: url("../images/resources/Bg-resource-steel.png");
+            }
+            &#Bronze-btn{
+              background-image: url("../images/resources/Bg-resource-bronze.png");
+            }
+            &#Copper-btn{
+              background-image: url("../images/resources/Bg-resource-copper.png");
+            }
+            &#Tin-btn{
+              background-image: url("../images/resources/Bg-resource-tin.png");
+            }
+            &#Coins-btn{
+              background-image: url("../images/resources/Bg-resource-coins.png");
+            }
           }
         }
+
         
 
         #Buildings-ul{
@@ -134,7 +140,7 @@
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
     justify-items: center;
-    align-items: center;
+    align-items:flex-end;
 
     .house-building {
         background-size: contain;
@@ -144,10 +150,22 @@
         height: 90%;
         width: 90%;
         text-align: center;
+        color: white;
+        font-family: "Special elite";
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 75px;
 
         p {
             margin: 0;
             padding: 0;
+            font-weight: 600;
+            
+            img {
+              filter: drop-shadow(0 0 2px white)
+            }
         }
     }
 }
