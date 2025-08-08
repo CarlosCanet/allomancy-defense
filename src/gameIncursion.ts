@@ -1,13 +1,14 @@
 import { Building } from "./building.js";
 import { Character } from "./character.js";
 import { Enemy } from "./enemy.js";
-import { RESOURCES } from "./allomancyDefenseGame.js";
+import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
 import { House } from "./houses.js";
 import { Game, MenuSection, type ResourceMap } from "./game.js";
 
 export class GameIncursion extends Game{
     resourcesMenuSectionNode: MenuSection;
-    alliesMenuSectionNode: MenuSection;
+    // alliesMenuSectionNode: MenuSection;  // TODO allies
+    fogNode: HTMLDivElement;
     producerAreas: Array<House>;
     playerCharacter: Character;
     enemies: Array<Enemy>;
@@ -26,7 +27,9 @@ export class GameIncursion extends Game{
         this.baseButtonsNode.id = "menu-incursion-list";
         this.baseNode.id = "incursion-ui";
         this.resourcesMenuSectionNode = new MenuSection("Resources", "resources-li");
-        this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");
+        // this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li"); // TODO Allies
+        this.fogNode = document.createElement("div");
+        this.fogNode.classList.add("fog");
 
         this.resources = resources;
         this.producerAreas = [];
@@ -40,8 +43,6 @@ export class GameIncursion extends Game{
         this.baseNode.append(this.playerCharacter.node);
         this.playerCharacter.render();
         document.addEventListener("keydown", this.handleKeyboardEvents);
-
-        
 
         this.gameTimerNode = document.createElement("div");
         this.gameTimerNode.classList.add("timer");
@@ -65,12 +66,13 @@ export class GameIncursion extends Game{
         this.gameBoxNode.innerHTML = "";
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
+        this.baseNode.append(this.fogNode);
         const h2Node = document.createElement("h2");
         h2Node.innerText = "Menu";
         this.menuNode.append(h2Node);
         this.menuNode.append(this.baseButtonsNode);
         this.baseButtonsNode.append(this.resourcesMenuSectionNode.sectionNode);
-        this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);
+        // this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);     // TODO Allies
         for (const [resource, amount] of this.resources.entries()) {
             this.resourcesMenuSectionNode.addElement(resource, resource, amount);
         }
@@ -149,12 +151,20 @@ export class GameIncursion extends Game{
         }
     };
 
+    updateMistOfWar = () => {
+        const mistRadius = (this.resources.get(METALS_RESOURCES.TIN)! > 0) ? "400px" : "200px";
+        this.fogNode.style.setProperty("--mist-radius", `${mistRadius}`);
+        this.fogNode.style.setProperty("--mist-x", `${this.playerCharacter.x.toString()}px`);
+        this.fogNode.style.setProperty("--mist-y", `${this.playerCharacter.y.toString()}px`);
+    }
+
     gameLoop = (tick: number): void => {
         // Update timer
         this.gameTimerNode.innerText = this.getTimerString();
 
         // Player and its projectiles
         this.playerCharacter.render(tick);
+        this.updateMistOfWar();
         this.playerCharacter.projectiles.forEach(projectile => {
             projectile.moveTowardsTarget()
             this.enemies.forEach((enemy, index) => {
@@ -192,6 +202,15 @@ export class GameIncursion extends Game{
         this.checkDespawnEnemy();
 
         // Resources
+        if (this.hasPassedAPeriod(tick, 0.3)) {
+            for (const [resource, amount] of this.resources) {
+                if (resource === OTHER_RESOURCES.COINS) {
+                    break;
+                }
+                let newAmount = (amount - 1) < 0 ? 0 : amount - 1;
+                this.resources.set(resource, newAmount);
+            }
+        }
         this.updateResourcesMenu();
     };
 }

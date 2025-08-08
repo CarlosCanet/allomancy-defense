@@ -13,6 +13,13 @@ export const OTHER_RESOURCES = { COINS: "Coins" };
 export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES };
 // export const RESOURCES = [...Object.values(METALS_RESOURCES), ...Object.values(OTHER_RESOURCES)];
 export const RESOURCES = [...Object.values(ALL_RESOURCES)];
+export const RESOURCE_IMAGES = {
+    [METALS_RESOURCES.STEEL]: "../images/resources/icon-Steel.png",
+    [METALS_RESOURCES.BRONZE]: "../images/resources/icon-Bronze.png",
+    [METALS_RESOURCES.COPPER]: "../images/resources/icon-Copper.png",
+    [METALS_RESOURCES.TIN]: "../images/resources/icon-Tin.png",
+    [OTHER_RESOURCES.COINS]: "../images/resources/icon-Coins.png",
+};
 export const HOUSES = ["Venture", "Cett", "Lekal", "Hastings", "Elariel"];
 export class AllomancyDefenseGame {
     // ATTRIBUTES
@@ -26,6 +33,8 @@ export class AllomancyDefenseGame {
     gameIncursion;
     startBtnNode;
     restartBtnNode;
+    continueBtnNode;
+    newGameBtnNode;
     // METHODS
     constructor(screens) {
         this.gameState = GameStates.WaitingToStart;
@@ -36,6 +45,12 @@ export class AllomancyDefenseGame {
         this.startBtnNode.innerText = "Start the rebellion";
         this.restartBtnNode.id = "restart-btn";
         this.restartBtnNode.innerHTML = "Be the hope.<br><br>Try again...";
+        this.continueBtnNode = document.createElement("button");
+        this.newGameBtnNode = document.createElement("button");
+        this.continueBtnNode.id = "continue-btn";
+        this.continueBtnNode.innerText = "Continue";
+        this.newGameBtnNode.id = "newGame-btn";
+        this.newGameBtnNode.innerText = "New rebellion";
         this.gameFrequency = Math.floor(1000 / 60);
         this.tick = 0;
         this.gameIntervalId = 0;
@@ -72,6 +87,11 @@ export class AllomancyDefenseGame {
         this.screenNodes.startScreenNode.append(containerNode);
         this.screenNodes.startScreenNode.append(this.startBtnNode);
         this.startBtnNode.addEventListener("click", this.startGame);
+        this.continueBtnNode.addEventListener("click", this.startIdleGame);
+        this.newGameBtnNode.addEventListener("click", () => {
+            localStorage.clear();
+            this.startIdleGame();
+        });
         this.showStartScreen();
     };
     createGameOverUI = () => {
@@ -81,8 +101,8 @@ export class AllomancyDefenseGame {
         const gameOverText1 = document.createElement("p");
         const gameOverText2 = document.createElement("p");
         const gameOverText3 = document.createElement("p");
-        gameOverText1.innerText = `But you can't kill me. I represent that one thing you've never been able to kill, no matter how hard you try. I AM HOPE.`;
-        gameOverText2.innerText = `No more memories! Focus on the moment.`;
+        gameOverText1.innerHTML = `<i>But you can't kill me. I represent that one thing you've never been able to kill, no matter how hard you try. I AM HOPE.</i>`;
+        gameOverText2.innerHTML = `<i>No more memories! Focus on the moment.</i>`;
         gameOverText3.innerText = `Your rebellion has failed!`;
         containerNode.append(gameOverText3);
         containerNode.append(gameOverText1);
@@ -92,11 +112,25 @@ export class AllomancyDefenseGame {
         this.restartBtnNode.addEventListener("click", this.startGame);
     };
     startGame = () => {
+        if (localStorage.length !== 0) {
+            const modalNode = document.createElement("div");
+            modalNode.classList.add("modal");
+            modalNode.innerHTML = `<p> Do you want to continue your rebellion?</p>`;
+            modalNode.append(this.continueBtnNode);
+            modalNode.append(this.newGameBtnNode);
+            this.screenNodes.startScreenNode.append(modalNode);
+        }
+        else {
+            this.startIdleGame();
+        }
+    };
+    startIdleGame = () => {
         this.gameState = GameStates.BaseBuilding;
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
         this.gameIdle.createBaseUI();
         this.showBaseScreen();
         this.gameIntervalId = setInterval(this.gameLoop, this.gameFrequency);
+        this.gameIdle.saveGameIdleInLocalStorage();
     };
     startIncursion = () => {
         this.gameState = GameStates.Incursioning;

@@ -1,4 +1,4 @@
-import { RESOURCES, type Resource } from "./allomancyDefenseGame.js";
+import { ALL_RESOURCES, RESOURCE_IMAGES, RESOURCES, type Resource } from "./allomancyDefenseGame.js";
 import type { Building } from "./building.js";
 
 export type ResourceMap = Map<Resource, number>;
@@ -21,23 +21,28 @@ export class MenuSection {
         this.liClassName = liClassName;
     }
 
-    addElement = (elementId: string, elementText: string, amount: number, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
+    addElement = (elementId: string, elementText: string, amount: number, event?: keyof HTMLElementEventMap, eventHandler?: () => void): void => {
         const newLiNode = document.createElement("li");
         newLiNode.classList.add("listMenu");
         newLiNode.classList.add(this.liClassName);
         newLiNode.id = `${elementId}-btn`;
+        let innerHTML = "";
         if (this.titleNode.innerText === "Resources") {
-            newLiNode.innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`
+            innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`
+        } else if (this.titleNode.innerText.startsWith("Buildings")) {
+            innerHTML = `<p><span id="amount">${amount}</span> <span>${elementText}</span></p>
+            <ul class="building-cost" id="${elementId}-cost"></ul>`;
         } else {
-            newLiNode.innerHTML = `<span>${elementText}</span> <span id="amount">${amount}</span>`;
+            innerHTML = `<p><span id="amount">${amount}</span> <span>${elementText}</span></p>`;
         }
+        newLiNode.innerHTML = innerHTML;
         if (event && eventHandler) {
             newLiNode.addEventListener(event, eventHandler);  
         }
         this.listNode.append(newLiNode);
     }
 
-    addElementWithIcon = (elementId: string, elementText: string, amount: number, iconSrc: string, event?: keyof HTMLElementEventMap, eventHandler?: () => void) => {
+    addElementWithIcon = (elementId: string, elementText: string, amount: number, iconSrc: string, event?: keyof HTMLElementEventMap, eventHandler?: () => void): void => {
         const newLiNode = document.createElement("li");
         newLiNode.classList.add("listMenu");
         newLiNode.classList.add(this.liClassName);
@@ -49,10 +54,39 @@ export class MenuSection {
         this.listNode.append(newLiNode);
     }
 
-    updateAmount = (elementName: string, amount: number) => {
+    updateAmount = (elementName: string, amount: number): void => {
         const liNode = this.sectionNode.querySelector<HTMLLIElement>(`#${elementName}-btn #amount`);
         if (liNode) {
             liNode.innerText = `${Math.floor(amount)}`;            
+        }
+    }
+
+    createResourcesCost = (buildingId: string, costResources: ResourceMap, actualResources: ResourceMap): void => {
+        const buildingListNode = document.querySelector(`#${buildingId}-cost`) as HTMLUListElement;
+        buildingListNode && this.createListResources(buildingListNode, costResources, actualResources)
+    }
+
+    createListResources = (ulNode: HTMLUListElement, costResources: ResourceMap, actualResources: ResourceMap): void => {
+        ulNode.innerHTML = "";
+        for (const [resource, amount] of actualResources) {
+            let liNode = document.createElement("li");
+            let resourceImg = document.createElement("img");
+            let amountSpan = document.createElement("span");
+
+            resourceImg.src = RESOURCE_IMAGES[resource];
+            resourceImg.width = 15;
+
+            let costAmount = costResources.get(resource);
+            (costAmount === undefined) && (costAmount = 0);
+            if (costAmount > amount) {
+                liNode.classList.add("missing");
+            }
+
+            amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
+            
+            liNode.append(resourceImg);
+            liNode.append(amountSpan);
+            ulNode.append(liNode);
         }
     }
 }
@@ -82,9 +116,9 @@ export abstract class Game {
         this.buildings = [];
     }
 
-    randomIntegerRange = (range: number, startValue: number) => Math.floor(Math.random() * range + startValue);
+    randomIntegerRange = (range: number, startValue: number): number => Math.floor(Math.random() * range + startValue);
 
-    updateResourcesMenu = () => {
+    updateResourcesMenu = (): void => {
         for (const resource of RESOURCES) {
             const value = this.resources.get(resource);
             if (value !== undefined) {

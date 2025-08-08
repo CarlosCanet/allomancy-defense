@@ -1,4 +1,4 @@
-import { OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
+import { OTHER_RESOURCES, RESOURCE_IMAGES, RESOURCES } from "./allomancyDefenseGame.js";
 import { House, HouseCett, HouseElariel, HouseHasting, HouseLekal, HouseVenture, type HouseConstructor } from "./houses.js";
 import { Game, MenuSection } from "./game.js";
 
@@ -6,7 +6,7 @@ const HousesMap: Record<string, HouseConstructor> = { HouseVenture, HouseCett, H
 export class GameIdle extends Game {
     resourcesMenuSectionNode: MenuSection;
     buildingsMenuSectionNode: MenuSection;
-    alliesMenuSectionNode: MenuSection;
+    // alliesMenuSectionNode: MenuSection;  // TODO future allies
     shouldStartIncursion: boolean;
     startIncursionBtnNode: HTMLButtonElement;
     ticksGeneratingIteration: number;
@@ -22,12 +22,13 @@ export class GameIdle extends Game {
         this.baseNode.id = "base-ui";
         this.resourcesMenuSectionNode = new MenuSection("Resources", "resources-li");
         this.buildingsMenuSectionNode = new MenuSection("Buildings", "buildings-li");
-        this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");
+        // this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");  // TODO future allies
         this.startIncursionBtnNode = document.createElement("button");
-
+        
         this.ticksGeneratingIteration = 0;
         this.maxSecondsUntilIncursion = 60;
         this.buildings = [];
+        this.buildingsMenuSectionNode.titleNode.innerText = `Buildings (${this.buildings.length}/16)`;
         this.shouldStartIncursion = false;
     }
 
@@ -42,10 +43,9 @@ export class GameIdle extends Game {
         this.menuNode.append(this.baseButtonsNode);
         this.baseButtonsNode.append(this.resourcesMenuSectionNode.sectionNode);
         this.baseButtonsNode.append(this.buildingsMenuSectionNode.sectionNode);
-        this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);
+        // this.baseButtonsNode.append(this.alliesMenuSectionNode.sectionNode);  // TODO future allies
         RESOURCES.forEach((resource) => {
             let localStorageResource = localStorage.getItem(resource);
-            console.log(localStorageResource);
             let amount = (resource === OTHER_RESOURCES.COINS) ? 130 : 0;
             if (localStorageResource) {
                 amount = parseInt(localStorageResource);
@@ -77,17 +77,41 @@ export class GameIdle extends Game {
     }
 
     addBuildingButton = (HouseClass: HouseConstructor): void => {
-        this.buildingsMenuSectionNode.addElement(HouseClass.getHouseName(), HouseClass.houseName, 0, "click", () => this.buyBuilding(HouseClass));
+        const houseName = HouseClass.getHouseName();
+        this.buildingsMenuSectionNode.addElement(houseName, HouseClass.houseName, HouseClass.howManyBuildings, "click", () => this.buyBuilding(HouseClass));
+        this.buildingsMenuSectionNode.createResourcesCost(houseName, HouseClass.costToBuild(), this.resources);
     }
 
     addBuilding = (HouseSubclass: HouseConstructor): void => {
         if (this.buildings.length < 16) {
             const newBuilding = new HouseSubclass(document.createElement("div"));
-            // newBuilding.node.innerHTML = `<p>${HouseSubclass.houseName}</p><br><p>${HouseSubclass.howManyBuildings} ${newBuilding.resource}</p>`;            
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
-            console.log(HouseSubclass.getHouseName());
+            newBuilding.node.innerHTML = `<p>${(newBuilding.constructor as typeof House).houseName}</p>
+            <br><p class="building-rate">+${newBuilding.amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[newBuilding.resource]} height="15px"/>/s</p>`;
             this.buildingsMenuSectionNode.updateAmount(`${HouseSubclass.getHouseName()}`, HouseSubclass.howManyBuildings);
+            const buildingTitle = this.buildingsMenuSectionNode.titleNode.innerText.split(" ")[0];
+            this.buildingsMenuSectionNode.titleNode.innerText = `${buildingTitle} (${this.buildings.length}/16)`;
+            this.buildingsMenuSectionNode.createResourcesCost(newBuilding.constructor.name, HouseSubclass.costToBuild(), this.resources);
+        }
+    }
+
+    updateRateBuilding = (building: House, amountRate: number): void => {
+        const buildingNode = building.node.querySelector(".building-rate");
+        if (buildingNode) {
+            buildingNode.innerHTML = `+${amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[building.resource]} height="15px"/>/s`;
+        }
+    }
+
+    removeLastBuilding = (): void => {
+        let building2Remove = this.buildings.pop();
+        if (building2Remove) {
+            const classOfBuilding = (building2Remove.constructor as typeof House);
+            this.buildingsMenuSectionNode.updateAmount(classOfBuilding.getHouseName(), classOfBuilding.howManyBuildings);
+            building2Remove.node.remove();
+            building2Remove.destroyHouse();
+            const buildingTitle = this.buildingsMenuSectionNode.titleNode.innerText.split(" ")[0];
+            this.buildingsMenuSectionNode.titleNode.innerText = `${buildingTitle} (${this.buildings.length}/16)`;
         }
     }
 
@@ -118,13 +142,7 @@ export class GameIdle extends Game {
 
     penalty = (penaltyLevel: number): void => {
         for (let i = 0; i < penaltyLevel; i++) {
-            let building2Remove = this.buildings.pop();
-            if (building2Remove) {
-                const classOfBuilding = (building2Remove.constructor as typeof House);
-                this.buildingsMenuSectionNode.updateAmount(classOfBuilding.getHouseName(), classOfBuilding.howManyBuildings);
-                building2Remove.node.remove();
-                building2Remove.destroyHouse();
-            }
+            this.removeLastBuilding();
         }
         for (const [resource, amount] of this.resources) {
             let newAmount = amount / 3 * penaltyLevel;
@@ -151,11 +169,12 @@ export class GameIdle extends Game {
                     let penaltyRate = house.amountRate / this.maxSecondsUntilIncursion * secondsGenerating;
                     let rate = house.amountRate - penaltyRate;
                     this.resources.set(house.resource, amount + ((rate < 0) ? 0 : rate));
+                    this.updateRateBuilding(house, rate);
                 }
             }
         })
 
-        // Free resources
+        // Free resources (coins)
         // if (this.hasPassedAPeriod(tick, 2)) {
         //     this.resources.set(OTHER_RESOURCES.COINS, this.resources.get(OTHER_RESOURCES.COINS)! + 10);            
         // }

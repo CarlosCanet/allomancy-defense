@@ -22,11 +22,11 @@ export class House extends Building {
         let totalCost = new Map();
         const baseCost = 20;
         const coefficient = 3.5;
-        totalCost.set(OTHER_RESOURCES.COINS, baseCost * coefficient ** this.howManyBuildings);
+        totalCost.set(OTHER_RESOURCES.COINS, Math.floor(baseCost * coefficient ** this.howManyBuildings));
         return totalCost;
     }
     static getHouseName() {
-        return this.houseName.replaceAll(" ", "-");
+        return this.houseName.replaceAll(" ", "");
     }
     destroyHouse = () => {
         const ctor = this.constructor;
