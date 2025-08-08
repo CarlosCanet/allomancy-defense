@@ -81,7 +81,7 @@ export class GameIdle extends Game {
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
             newBuilding.node.innerHTML = `<p>${newBuilding.constructor.houseName}</p>
-            <br><p class="building-rate">+${newBuilding.amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[newBuilding.resource]} height="15px"/>/s</p>`;
+            <br><p class="building-rate">+${newBuilding.amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[newBuilding.resource].slice(1)} height="15px"/>/s</p>`;
             this.buildingsMenuSectionNode.updateAmount(`${HouseSubclass.getHouseName()}`, HouseSubclass.howManyBuildings);
             const buildingTitle = this.buildingsMenuSectionNode.titleNode.innerText.split(" ")[0];
             this.buildingsMenuSectionNode.titleNode.innerText = `${buildingTitle} (${this.buildings.length}/16)`;
@@ -91,7 +91,7 @@ export class GameIdle extends Game {
     updateRateBuilding = (building, amountRate) => {
         const buildingNode = building.node.querySelector(".building-rate");
         if (buildingNode) {
-            buildingNode.innerHTML = `+${amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[building.resource]} height="15px"/>/s`;
+            buildingNode.innerHTML = `+${amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[building.resource].slice(1)} height="15px"/>/s`;
         }
     };
     removeLastBuilding = () => {
