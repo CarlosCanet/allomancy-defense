@@ -39,7 +39,7 @@ export class House extends Building {
     }
 
     static getHouseName(): string {
-        return this.houseName.replaceAll(" ", "-");
+        return this.houseName.replaceAll(" ", "");
     }
 
     destroyHouse = () => {

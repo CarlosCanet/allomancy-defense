@@ -26,7 +26,7 @@ export class House extends Building {
         return totalCost;
     }
     static getHouseName() {
-        return this.houseName.replaceAll(" ", "-");
+        return this.houseName.replaceAll(" ", "");
     }
     destroyHouse = () => {
         const ctor = this.constructor;

@@ -1,4 +1,4 @@
-import { RESOURCES } from "./allomancyDefenseGame.js";
+import { ALL_RESOURCES, RESOURCE_IMAGES, RESOURCES } from "./allomancyDefenseGame.js";
 export class MenuSection {
     sectionNode;
     titleNode;
@@ -20,12 +20,18 @@ export class MenuSection {
         newLiNode.classList.add("listMenu");
         newLiNode.classList.add(this.liClassName);
         newLiNode.id = `${elementId}-btn`;
+        let innerHTML = "";
         if (this.titleNode.innerText === "Resources") {
-            newLiNode.innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`;
+            innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`;
+        }
+        else if (this.titleNode.innerText.startsWith("Buildings")) {
+            innerHTML = `<p><span>${elementText}</span> <span id="amount">${amount}</span></p>
+            <ul class="building-cost" id="${elementId}-cost"></ul>`;
         }
         else {
-            newLiNode.innerHTML = `<span>${elementText}</span> <span id="amount">${amount}</span>`;
+            innerHTML = `<p><span>${elementText}</span> <span id="amount">${amount}</span></p>`;
         }
+        newLiNode.innerHTML = innerHTML;
         if (event && eventHandler) {
             newLiNode.addEventListener(event, eventHandler);
         }
@@ -46,6 +52,44 @@ export class MenuSection {
         const liNode = this.sectionNode.querySelector(`#${elementName}-btn #amount`);
         if (liNode) {
             liNode.innerText = `${Math.floor(amount)}`;
+        }
+    };
+    createResourcesCost = (buildingId, costResources, actualResources) => {
+        const buildingListNode = document.querySelector(`#${buildingId}-cost`);
+        for (const [resource, amount] of actualResources) {
+            let liNode = document.createElement("li");
+            let resourceImg = document.createElement("img");
+            let amountSpan = document.createElement("span");
+            resourceImg.src = RESOURCE_IMAGES[resource];
+            resourceImg.width = 15;
+            let costAmount = costResources.get(resource);
+            (costAmount === undefined) && (costAmount = 0);
+            if (costAmount > amount) {
+                liNode.classList.add("missing");
+            }
+            amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
+            liNode.append(resourceImg);
+            liNode.append(amountSpan);
+            buildingListNode?.append(liNode);
+        }
+    };
+    updateResourcesCost = (buildingId, costResources, actualResources) => {
+        const buildingListNode = document.querySelector(`#${buildingId}-cost`);
+        for (const [resource, amount] of actualResources) {
+            let liNode = document.querySelector("li");
+            let resourceImg = document.querySelector("img");
+            let amountSpan = document.querySelector("span");
+            if (liNode && resourceImg && amountSpan) {
+                let costAmount = costResources.get(resource);
+                (costAmount === undefined) && (costAmount = 0);
+                if (costAmount > amount) {
+                    liNode.classList.add("missing");
+                }
+                else {
+                    liNode.classList.remove("missing");
+                }
+                amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
+            }
         }
     };
 }

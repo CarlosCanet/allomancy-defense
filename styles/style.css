@@ -130,6 +130,35 @@ button {
     background-color: rgb(9 41 57 / 73%);
     color: slategray;
   }
+
+  .modal{
+    position: absolute;
+    top: 22%;
+    left: 36%;
+    /* height: 200px; */
+    background-color: rgb(9 41 57 / 90%);
+    padding: 20px;
+    border-radius: 20px;
+    border: solid 1px dimgray;
+    box-shadow: 5px 5px 10px 5px rgba(20, 20, 20, 0.8);
+    color: white;
+    font-family: "Special elite";
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 25px;
+    padding: 50px 100px;
+
+    p {
+      padding-bottom: 10px;
+      color: lightcyan;
+    }
+
+    button {
+      color: slategray;
+      background-color: rgb(9 41 57 / 73%);
+    }
+  }
 }
 
 
@@ -145,7 +174,12 @@ button {
       font-weight: 600;
       color: white;
       font-size: 2em;
+      
+      &:nth-last-child(2), &:nth-last-child(3){
+        font-style: italic;
+      }
     }
+    
   }
 
   #restart-btn {

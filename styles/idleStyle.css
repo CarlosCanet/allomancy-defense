@@ -21,6 +21,7 @@
         justify-content: space-evenly;
         flex-direction: row;
         flex-wrap: wrap;
+        gap: 20px;
 
         h2 {
           /* opacity: 50%; */
@@ -65,35 +66,56 @@
             background-image: url("../images/resources/Bg-resource-coins.png");
           }
         }
+        
 
-        .buildings-li{
-          /* padding: 5px; */
-          min-width: 80px;
-          font-size: 1em;
-          background-size: cover;
-          background-position: center left;
-          border-radius: 5px;
-          border: solid 2px rgba(50, 50, 50, 0.9);
-          
-          &#House-Venture-btn{
-            background-image: url("../images/resources/Bg-house-venture.jpg");
-          }
-          &#House-Cett-btn{
-            background-image: url("../images/resources/Bg-house-ceet.jpg");
-          }
-          &#House-Lekal-btn{
-            background-image: url("../images/resources/Bg-house-lekal.jpg");
-          }
-          &#House-Hasting-btn{
-            background-image: url("../images/resources/Bg-house-hasting.jpg");
-          }
-          &#House-Elariel-btn{
-            background-image: url("../images/resources/Bg-house-elariel.jpg");
-          }
+        #Buildings-ul{
+          .buildings-li{
+            /* padding: 5px; */
+            /* min-width: 80px; */
+            width: 100%;
+            height: 100%;
+            font-size: 1em;
+            text-align: center;
+            padding: 10px;
+            background-size: cover;
+            background-position: center left;
+            border-radius: 5px;
+            border: solid 2px rgba(50, 50, 50, 0.9);
+            
+            &#HouseVenture-btn{
+              background-image: url("../images/resources/Bg-house-venture.jpg");
+            }
+            &#HouseCett-btn{
+              background-image: url("../images/resources/Bg-house-ceet.jpg");
+            }
+            &#HouseLekal-btn{
+              background-image: url("../images/resources/Bg-house-lekal.jpg");
+            }
+            &#HouseHasting-btn{
+              background-image: url("../images/resources/Bg-house-hasting.jpg");
+            }
+            &#HouseElariel-btn{
+              background-image: url("../images/resources/Bg-house-elariel.jpg");
+            }
+            
+            &:hover{
+              transform: scale(1.1, 1.1);
+              transition: 0.1s linear;
+            }          
+            
+            .building-cost{
+              display: flex;
+              flex-direction: row;
+              justify-content: space-around;
+              align-items: center;
+              gap: 10px;
 
-          &:hover{
-            transform: scale(1.1, 1.1);
-            transition: 0.1s linear;
+              li{
+                font-family: 'Courier New', Courier, monospace;
+                padding: 0;
+                height: auto;
+              }
+            }
           }
         }
     }
