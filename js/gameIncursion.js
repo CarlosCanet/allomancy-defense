@@ -104,9 +104,10 @@ export class GameIncursion extends Game {
         // const y = Math.floor(Math.random() * (this.baseNode.offsetHeight - 2*h));
         const x = this.randomIntegerRange(this.baseNode.offsetWidth - w, 0);
         const y = this.randomIntegerRange(this.baseNode.offsetHeight - 2 * h, 0);
-        const ds = Math.random() * varSize - varSize / 2 + 1;
+        const dSize = Math.random() * varSize - varSize / 2 + 1;
         const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)];
-        const newArea = new House(x, y, w * ds, h * ds, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate, 5, 1);
+        const amountRate = this.randomIntegerRange(5, 4) * dSize;
+        const newArea = new House(x, y, w * dSize, h * dSize, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate, amountRate, 1);
         newArea.node.style.width = `${newArea.w}px`;
         newArea.node.style.height = `${newArea.h}px`;
         newArea.node.classList.add("area-producer");
