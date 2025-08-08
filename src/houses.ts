@@ -53,8 +53,7 @@ export class HouseVenture extends House {
     static howManyBuildings: number = 0;
     constructor(node: HTMLDivElement, gameBoxNode: HTMLDivElement) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Venture Building`, METALS_RESOURCES.STEEL, 0, 2);
-        // this.createSpriteArray("../images/houses/House03", "png", 15);
-        this.createSpriteArray("../images/houses/House-Gothic01", "png", 1);
+        this.createSpriteArray("./images/houses/House-Gothic01", "png", 1);
     }
 }
 
@@ -63,8 +62,7 @@ export class HouseCett extends House {
     static howManyBuildings: number = 0;
     constructor(node: HTMLDivElement, gameBoxNode: HTMLDivElement) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Cett Building`, OTHER_RESOURCES.COINS, 0, 1);
-        // this.createSpriteArray("../images/houses/House05", "png", 15);
-        this.createSpriteArray("../images/houses/House-Gothic02", "png", 1);
+        this.createSpriteArray("./images/houses/House-Gothic02", "png", 1);
     }
 }
 
@@ -73,8 +71,7 @@ export class HouseLekal extends House {
     static howManyBuildings: number = 0;
     constructor(node: HTMLDivElement, gameBoxNode: HTMLDivElement) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Lekal Building`, METALS_RESOURCES.TIN, 0, 1);
-        // this.createSpriteArray("../images/houses/House01", "png", 1);
-        this.createSpriteArray("../images/houses/House-Gothic03", "png", 1);
+        this.createSpriteArray("./images/houses/House-Gothic03", "png", 1);
     }
 }
 
@@ -83,8 +80,7 @@ export class HouseHasting extends House {
     static howManyBuildings: number = 0;
     constructor(node: HTMLDivElement, gameBoxNode: HTMLDivElement) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Hasting Building`, METALS_RESOURCES.BRONZE, 0, 1);
-        // this.createSpriteArray("../images/houses/House04", "png", 1);
-        this.createSpriteArray("../images/houses/House-Gothic04", "png", 1);
+        this.createSpriteArray("./images/houses/House-Gothic04", "png", 1);
     }
 }
 
@@ -93,7 +89,6 @@ export class HouseElariel extends House {
     static howManyBuildings: number = 0;
     constructor(node: HTMLDivElement, gameBoxNode: HTMLDivElement) {
         super(0, 0, 0, 0, node, gameBoxNode, `House Elariel Building`, METALS_RESOURCES.COPPER, 0, 1);
-        // this.createSpriteArray("../images/houses/House02", "png", 1);
-        this.createSpriteArray("../images/houses/House-Gothic05", "png", 1);
+        this.createSpriteArray("./images/houses/House-Gothic05", "png", 1);
     }
 }
