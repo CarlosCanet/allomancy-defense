@@ -73,7 +73,7 @@ export class MenuSection {
             let resourceImg = document.createElement("img");
             let amountSpan = document.createElement("span");
 
-            resourceImg.src = RESOURCE_IMAGES[resource];
+            resourceImg.src = RESOURCE_IMAGES[resource].slice(1);
             resourceImg.width = 15;
 
             let costAmount = costResources.get(resource);
