@@ -65,7 +65,7 @@ export class GameIdle extends Game {
         this.startIncursionBtnNode.id = "start-incursion-btn";
         this.startIncursionBtnNode.addEventListener("click", () => this.shouldStartIncursion = true);
         this.menuNode.append((this.startIncursionBtnNode));
-        this.bgMusicNode.src = "../sfx/backgroundMusic-idle-DeusLower.mp3";
+        this.bgMusicNode.src = "./sfx/backgroundMusic-idle-DeusLower.mp3";
         this.bgMusicNode.loop = true;
         this.bgMusicNode.autoplay = true;
         this.bgMusicNode.volume = 0.3;

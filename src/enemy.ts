@@ -8,17 +8,17 @@ export class Enemy extends Character {
         this.node.classList.add("enemy");
         this.node.style.width = `${w}px`;
         this.node.style.height = `${h}px`;
-        this.deathSFXNode.src = "../sfx/enemyDeath.mp3";
+        this.deathSFXNode.src = "./sfx/enemyDeath.mp3";
         this.deathSFXNode.volume = 0.1;
         this.spawnEnemy();
     }
 
     addSpritesLeft = () => {
-        this.createSpriteArray("../images/characters/guard/soldier-walk-left", "png", 15);
+        this.createSpriteArray("./images/characters/guard/soldier-walk-left", "png", 15);
     }
     
     addSpritesRight = () => {
-        this.createSpriteArray("../images/characters/guard/soldier-walk-right", "png", 15);
+        this.createSpriteArray("./images/characters/guard/soldier-walk-right", "png", 15);
     }
 
     spawnEnemy = () => {
