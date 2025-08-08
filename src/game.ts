@@ -30,10 +30,10 @@ export class MenuSection {
         if (this.titleNode.innerText === "Resources") {
             innerHTML = `<img src="./images/resources/icon-${elementText}.png" height="20px"/><span>${elementText}</span> <span id="amount">${amount}</span>`
         } else if (this.titleNode.innerText.startsWith("Buildings")) {
-            innerHTML = `<p><span>${elementText}</span> <span id="amount">${amount}</span></p>
+            innerHTML = `<p><span id="amount">${amount}</span> <span>${elementText}</span></p>
             <ul class="building-cost" id="${elementId}-cost"></ul>`;
         } else {
-            innerHTML = `<p><span>${elementText}</span> <span id="amount">${amount}</span></p>`;
+            innerHTML = `<p><span id="amount">${amount}</span> <span>${elementText}</span></p>`;
         }
         newLiNode.innerHTML = innerHTML;
         if (event && eventHandler) {
