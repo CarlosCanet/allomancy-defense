@@ -140,7 +140,7 @@ export class AllomancyDefenseGame {
     };
     finishIncursion = () => {
         this.gameIncursion = null;
-        this.gameIdle.restartTimeSinceIncursion();
+        this.gameIdle.restartTimeSinceIncursion(this.tick);
         this.showBaseScreen();
     };
     showStartScreen = () => {

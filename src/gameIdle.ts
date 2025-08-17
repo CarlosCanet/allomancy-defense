@@ -146,7 +146,8 @@ export class GameIdle extends Game {
         }
     }
 
-    restartTimeSinceIncursion = () => {
+    restartTimeSinceIncursion = (tick: number) => {
+        this.tick = tick;
         this.ticksGeneratingIteration = this.tick;
         this.buildings.forEach(building => building.updateTickStartProducing(this.tick));
     }
