@@ -88,16 +88,16 @@
           background-image: url("../images/resources/Bg-resource-steel.png");
         }
         &#HouseCett-btn {
-          background-image: url("../images/resources/Bg-resource-bronze.png");
+          background-image: url("../images/resources/Bg-resource-coins.png");
         }
         &#HouseLekal-btn {
-          background-image: url("../images/resources/Bg-resource-copper.png");
-        }
-        &#HouseHasting-btn {
           background-image: url("../images/resources/Bg-resource-tin.png");
         }
+        &#HouseHasting-btn {
+          background-image: url("../images/resources/Bg-resource-bronze.png");
+        }
         &#HouseElariel-btn {
-          background-image: url("../images/resources/Bg-resource-coins.png");
+          background-image: url("../images/resources/Bg-resource-copper.png");
         }
 
         &:hover {
