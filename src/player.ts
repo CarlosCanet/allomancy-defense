@@ -57,6 +57,7 @@ export class Player extends GameObject {
     };
 
     handleClick = (event: MouseEvent) => {
+        this.checkCanShootProjectile();
         if (this.canShoot) {
             this.coinSFXNode.play();
             this.createProjectile(event.layerX, event.layerY);
