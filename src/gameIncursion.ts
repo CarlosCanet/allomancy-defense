@@ -34,7 +34,7 @@ export class GameIncursion extends Game{
 
         // Crear el elemento de video para la niebla
         const fogVideo = document.createElement("video");
-        fogVideo.src = "../images/MistLoop.mp4"; // Asegúrate de que la ruta a tu video es correcta
+        fogVideo.src = "./images/MistLoop.mp4"; // Asegúrate de que la ruta a tu video es correcta
         fogVideo.autoplay = true;
         fogVideo.loop = true;
         fogVideo.muted = true; // Esencial para que el autoplay funcione en la mayoría de navegadores
