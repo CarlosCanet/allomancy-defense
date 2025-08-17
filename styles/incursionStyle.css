@@ -144,7 +144,6 @@
   
   #player-character {
     position: absolute;
-    background-image: url("../images/characters/adventurerFemale/adventurerFemale41.png");
     background-size: contain;
     background-repeat: no-repeat;
     /* font-size: 0.6em; */
