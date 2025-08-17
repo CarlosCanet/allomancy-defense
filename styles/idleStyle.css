@@ -89,19 +89,19 @@
             border: solid 2px rgba(50, 50, 50, 0.9);
             
             &#HouseVenture-btn{
-              background-image: url("../images/resources/Bg-house-venture.jpg");
+              background-image: url("../images/resources/Bg-resource-steel.png");
             }
             &#HouseCett-btn{
-              background-image: url("../images/resources/Bg-house-ceet.jpg");
+              background-image: url("../images/resources/Bg-resource-bronze.png");
             }
             &#HouseLekal-btn{
-              background-image: url("../images/resources/Bg-house-lekal.jpg");
+              background-image: url("../images/resources/Bg-resource-copper.png");
             }
             &#HouseHasting-btn{
-              background-image: url("../images/resources/Bg-house-hasting.jpg");
+              background-image: url("../images/resources/Bg-resource-tin.png");
             }
             &#HouseElariel-btn{
-              background-image: url("../images/resources/Bg-house-elariel.jpg");
+              background-image: url("../images/resources/Bg-resource-coins.png");
             }
             
             &:hover{

@@ -1,4 +1,4 @@
-import { ALL_RESOURCES, RESOURCE_IMAGES, RESOURCES } from "./allomancyDefenseGame.js";
+import { RESOURCE_IMAGES, RESOURCES } from "./allomancyDefenseGame.js";
 export class MenuSection {
     sectionNode;
     titleNode;

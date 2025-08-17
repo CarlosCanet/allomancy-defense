@@ -6,7 +6,6 @@ export enum GameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
 export const METALS_RESOURCES = { STEEL: "Steel", BRONZE: "Bronze", COPPER: "Copper", TIN: "Tin" } as const;
 export const OTHER_RESOURCES = { COINS: "Coins" } as const;
 export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES } as const;
-// export const RESOURCES = [...Object.values(METALS_RESOURCES), ...Object.values(OTHER_RESOURCES)];
 export const RESOURCES = [...Object.values(ALL_RESOURCES)];
 export type Resource = (typeof RESOURCES)[number];
 export type Metal = (typeof METALS_RESOURCES)[keyof typeof METALS_RESOURCES];
@@ -158,6 +157,7 @@ export class AllomancyDefenseGame {
 
     finishIncursion = () => {
         this.gameIncursion = null;
+        this.gameIdle!.restartTimeSinceIncursion();
         this.showBaseScreen();
     }
 

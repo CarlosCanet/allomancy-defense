@@ -1,5 +1,5 @@
 import { Building } from "./building.js";
-import { Character } from "./character.js";
+import { Player } from "./player.js";
 import { Enemy } from "./enemy.js";
 import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
 import { House } from "./houses.js";
@@ -10,7 +10,7 @@ export class GameIncursion extends Game{
     // alliesMenuSectionNode: MenuSection;  // TODO allies
     fogNode: HTMLDivElement;
     producerAreas: Array<House>;
-    playerCharacter: Character;
+    playerCharacter: Player;
     enemies: Array<Enemy>;
     progressLevel: number;
     isIncursionOver: boolean;
@@ -18,6 +18,7 @@ export class GameIncursion extends Game{
     gameTimer: number;
     gameTimerNode: HTMLDivElement;
     gameTimerInterval: number;
+    gameTimerTimeout: number;
 
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number, resources: ResourceMap) {
         super(gameBoxNode, gameFrequency);
@@ -38,7 +39,7 @@ export class GameIncursion extends Game{
         this.isIncursionOver = false;
         this.isPlayerCaught = false;
 
-        this.playerCharacter = new Character(30, 40, 24, 48, document.createElement("div"), this.baseNode, 10, 10, true, this);
+        this.playerCharacter = new Player(30, 40, 24, 48, document.createElement("div"), this.baseNode, 10, 10, true, this);
         this.playerCharacter.node.id = "player-character";
         this.baseNode.append(this.playerCharacter.node);
         this.playerCharacter.render();
@@ -50,7 +51,7 @@ export class GameIncursion extends Game{
         const incursionDuration = this.randomIntegerRange(20,50)*1000;
         this.gameTimer = incursionDuration/1000;
         this.gameTimerInterval = setInterval(() => this.gameTimer--, 1000);
-        setTimeout(() => {
+        this.gameTimerTimeout = setTimeout(() => {
             this.isIncursionOver = true;
             clearInterval(this.gameTimerInterval);
         }, incursionDuration);
@@ -117,7 +118,7 @@ export class GameIncursion extends Game{
         const y = this.randomIntegerRange(this.baseNode.offsetHeight - 2 * h, 0);
         const dSize = Math.random() * varSize - varSize / 2 + 1;
         const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)];
-        const amountRate = this.randomIntegerRange(5, 4) * dSize;
+        const amountRate = this.randomIntegerRange(20, 5) * dSize;
         const newArea = new House(x, y, w * dSize, h * dSize, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate!, amountRate, 1);
         newArea.node.style.width = `${newArea.w}px`;
         newArea.node.style.height = `${newArea.h}px`;
@@ -142,7 +143,7 @@ export class GameIncursion extends Game{
     }
 
     spawnEnemy = () => {
-        this.enemies.push(new Enemy(32, 53, this.baseNode, this.randomIntegerRange(4, 1), this));
+        this.enemies.push(new Enemy(32, 53, this.baseNode, this.randomIntegerRange(3, 1), this));
     };
 
     checkDespawnEnemy = () => {
@@ -153,7 +154,7 @@ export class GameIncursion extends Game{
     };
 
     updateMistOfWar = () => {
-        const mistRadius = (this.resources.get(METALS_RESOURCES.TIN)! > 0) ? "400px" : "200px";
+        const mistRadius = (this.resources.get(METALS_RESOURCES.TIN)! > 0) ? "600px" : "300px";
         this.fogNode.style.setProperty("--mist-radius", `${mistRadius}`);
         this.fogNode.style.setProperty("--mist-x", `${this.playerCharacter.x.toString()}px`);
         this.fogNode.style.setProperty("--mist-y", `${this.playerCharacter.y.toString()}px`);
@@ -183,13 +184,13 @@ export class GameIncursion extends Game{
             if (this.hasPassedAPeriod(tick, area.periodInSec) && this.playerCharacter.isCollidingWith(area)) {
                 let amount = this.resources.get(area.resource);
                 if (amount !== undefined) {
-                    this.resources.set(area.resource, amount + area.amountRate);
+                    this.resources.set(area.resource, amount + area.maxAmountRate);
                 }
             }
         });
 
         // Enemies and its projectiles
-        if (this.hasPassedAPeriod(tick, this.randomIntegerRange(6 / this.progressLevel, 2 / this.progressLevel))) {
+        if (this.hasPassedAPeriod(tick, this.randomIntegerRange(10 / this.progressLevel, 5 / this.progressLevel))) {
             this.spawnEnemy();
         }
         this.enemies.forEach((enemy) => {
@@ -202,15 +203,17 @@ export class GameIncursion extends Game{
         });
         this.checkDespawnEnemy();
 
-        // Resources
-        if (this.hasPassedAPeriod(tick, 0.3)) {
-            for (const [resource, amount] of this.resources) {
-                if (resource === OTHER_RESOURCES.COINS) {
-                    break;
-                }
-                let newAmount = (amount - 1) < 0 ? 0 : amount - 1;
-                this.resources.set(resource, newAmount);
-            }
+        // Consuming Resources
+        if (this.hasPassedAPeriod(tick, 1)) {
+            // for (const [resource, amount] of this.resources) {
+            //     if (resource === OTHER_RESOURCES.COINS) {
+            //         break;
+            //     }
+            //     let newAmount = (amount - 1) < 0 ? 0 : amount - 1;
+            //     this.resources.set(resource, newAmount);
+            // }
+            const tin = this.resources.get(METALS_RESOURCES.TIN)!;
+            this.resources.set(METALS_RESOURCES.TIN, tin - 1);
         }
         this.updateResourcesMenu();
     };

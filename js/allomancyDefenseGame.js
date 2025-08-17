@@ -11,7 +11,6 @@ export var GameStates;
 export const METALS_RESOURCES = { STEEL: "Steel", BRONZE: "Bronze", COPPER: "Copper", TIN: "Tin" };
 export const OTHER_RESOURCES = { COINS: "Coins" };
 export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES };
-// export const RESOURCES = [...Object.values(METALS_RESOURCES), ...Object.values(OTHER_RESOURCES)];
 export const RESOURCES = [...Object.values(ALL_RESOURCES)];
 export const RESOURCE_IMAGES = {
     [METALS_RESOURCES.STEEL]: "../images/resources/icon-Steel.png",
@@ -141,6 +140,7 @@ export class AllomancyDefenseGame {
     };
     finishIncursion = () => {
         this.gameIncursion = null;
+        this.gameIdle.restartTimeSinceIncursion();
         this.showBaseScreen();
     };
     showStartScreen = () => {
