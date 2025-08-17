@@ -6,7 +6,7 @@ export enum GameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
 export const METALS_RESOURCES = { STEEL: "Steel", BRONZE: "Bronze", COPPER: "Copper", TIN: "Tin" } as const;
 export const OTHER_RESOURCES = { COINS: "Coins" } as const;
 export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES } as const;
-export const RESOURCES = [...Object.values(ALL_RESOURCES)];
+export const RESOURCES = [...Object.values(ALL_RESOURCES)] as const;
 export type Resource = (typeof RESOURCES)[number];
 export type Metal = (typeof METALS_RESOURCES)[keyof typeof METALS_RESOURCES];
 export const RESOURCE_IMAGES: Record<Resource, string> = {
@@ -71,7 +71,7 @@ export class AllomancyDefenseGame {
         this.createGameOverUI();
     }
 
-    createStartUI = () => {
+    createStartUI = (): void => {
         const containerNode = document.createElement("div");
         containerNode.classList.add("container");
         const startText1Node = document.createElement("div");
@@ -107,7 +107,7 @@ export class AllomancyDefenseGame {
         this.showStartScreen();
     }
 
-    createGameOverUI = () => {
+    createGameOverUI = (): void => {
         const containerNode = document.createElement("div");
         containerNode.classList.add("container");
         containerNode.id = "game-over-container";
@@ -125,7 +125,7 @@ export class AllomancyDefenseGame {
         this.restartBtnNode.addEventListener("click", this.startGame);
     }
 
-    startGame = () => {
+    startGame = (): void => {
         if (localStorage.length !== 0) {
             const modalNode = document.createElement("div");
             modalNode.classList.add("modal");
@@ -138,7 +138,7 @@ export class AllomancyDefenseGame {
         }
     };
 
-    startIdleGame = () => {
+    startIdleGame = (): void => {
         this.gameState = GameStates.BaseBuilding;
         this.gameIdle = new GameIdle(this.screenNodes.baseGameBoxNode, this.gameFrequency);
         this.gameIdle.createBaseUI();
@@ -147,49 +147,49 @@ export class AllomancyDefenseGame {
         this.gameIdle.saveGameIdleInLocalStorage();
     }
 
-    startIncursion = () => {
+    startIncursion = (): void => {
         this.gameState = GameStates.Incursioning;
-        this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle!.resources);
-        this.gameIdle!.shouldStartIncursion = false;
-        this.gameIncursion.createIncursionUI();
+        this.gameIdle && (this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle.resources));
+        this.gameIdle && (this.gameIdle.shouldStartIncursion = false);
+        this.gameIncursion && (this.gameIncursion.createIncursionUI());
         this.showIncursionScreen();
     };
 
-    finishIncursion = () => {
+    finishIncursion = (): void => {
         this.gameIncursion = null;
-        this.gameIdle!.restartTimeSinceIncursion();
+        this.gameIdle && this.gameIdle.restartTimeSinceIncursion(this.tick);
         this.showBaseScreen();
     }
 
-    showStartScreen = () => {
+    showStartScreen = (): void => {
         this.screenNodes.startScreenNode.style.display = "flex";
         this.screenNodes.gameDefenseScreenNode.style.display = "none";
         this.screenNodes.gameIncursionScreenNode.style.display = "none";
         this.screenNodes.gameOverScreenNode.style.display = "none";
     };
 
-    showBaseScreen = () => {
+    showBaseScreen = (): void => {
         this.screenNodes.startScreenNode.style.display = "none";
         this.screenNodes.gameDefenseScreenNode.style.display = "flex";
         this.screenNodes.gameIncursionScreenNode.style.display = "none";
         this.screenNodes.gameOverScreenNode.style.display = "none";
     };
 
-    showIncursionScreen = () => {
+    showIncursionScreen = (): void => {
         this.screenNodes.startScreenNode.style.display = "none";
         this.screenNodes.gameDefenseScreenNode.style.display = "none";
         this.screenNodes.gameIncursionScreenNode.style.display = "flex";
         this.screenNodes.gameOverScreenNode.style.display = "none";
     };
 
-    showGameOver = () => {
+    showGameOver = (): void => {
         this.screenNodes.startScreenNode.style.display = "none";
         this.screenNodes.gameDefenseScreenNode.style.display = "none";
         this.screenNodes.gameIncursionScreenNode.style.display = "none";
         this.screenNodes.gameOverScreenNode.style.display = "flex";
     };
 
-    gameLoop = () => {
+    gameLoop = (): void => {
         this.tick++;
         switch (this.gameState) {
             case GameStates.WaitingToStart:
@@ -229,7 +229,7 @@ export class AllomancyDefenseGame {
         }
     };
 
-    gameOver = () => {
+    gameOver = (): void => {
         localStorage.clear();
         this.showGameOver();
     };

@@ -54,29 +54,6 @@ export class MenuSection {
             liNode.innerText = `${Math.floor(amount)}`;
         }
     };
-    createResourcesCost = (buildingId, costResources, actualResources) => {
-        const buildingListNode = document.querySelector(`#${buildingId}-cost`);
-        buildingListNode && this.createListResources(buildingListNode, costResources, actualResources);
-    };
-    createListResources = (ulNode, costResources, actualResources) => {
-        ulNode.innerHTML = "";
-        for (const [resource, amount] of actualResources) {
-            let liNode = document.createElement("li");
-            let resourceImg = document.createElement("img");
-            let amountSpan = document.createElement("span");
-            resourceImg.src = RESOURCE_IMAGES[resource].slice(1);
-            resourceImg.width = 15;
-            let costAmount = costResources.get(resource);
-            (costAmount === undefined) && (costAmount = 0);
-            if (costAmount > amount) {
-                liNode.classList.add("missing");
-            }
-            amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
-            liNode.append(resourceImg);
-            liNode.append(amountSpan);
-            ulNode.append(liNode);
-        }
-    };
 }
 export class Game {
     gameBoxNode;

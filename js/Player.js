@@ -55,12 +55,13 @@ export class Player extends GameObject {
         }
     };
     handleClick = (event) => {
+        this.checkCanShootProjectile();
         if (this.canShoot) {
             this.coinSFXNode.play();
             this.createProjectile(event.layerX, event.layerY);
             this.canShoot = false;
             for (const [resource, amount] of this.shootCost) {
-                let actualAmount = this.gameIncursion.resources.get(resource);
+                let actualAmount = this.gameIncursion.resources.get(resource) ?? 0;
                 this.gameIncursion.resources.set(resource, actualAmount - amount);
             }
             setTimeout(() => this.canShoot = true, this.timeBetweenShoots);
@@ -69,7 +70,7 @@ export class Player extends GameObject {
     checkCanShootProjectile = () => {
         this.canShoot = true;
         for (const [resource, amount] of this.shootCost) {
-            if (amount > this.gameIncursion.resources.get(resource)) {
+            if (amount > (this.gameIncursion.resources.get(resource) ?? 0)) {
                 this.canShoot = false;
                 break;
             }

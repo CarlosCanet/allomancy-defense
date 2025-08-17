@@ -1,7 +1,7 @@
 import { Building } from "./building.js";
 import { Player } from "./player.js";
 import { Enemy } from "./enemy.js";
-import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
+import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES, type Resource } from "./allomancyDefenseGame.js";
 import { House } from "./houses.js";
 import { Game, MenuSection, type ResourceMap } from "./game.js";
 
@@ -31,6 +31,14 @@ export class GameIncursion extends Game{
         // this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li"); // TODO Allies
         this.fogNode = document.createElement("div");
         this.fogNode.classList.add("fog");
+
+        // Crear el elemento de video para la niebla
+        const fogVideo = document.createElement("video");
+        fogVideo.src = "../images/MistLoop.mp4"; // Asegúrate de que la ruta a tu video es correcta
+        fogVideo.autoplay = true;
+        fogVideo.loop = true;
+        fogVideo.muted = true; // Esencial para que el autoplay funcione en la mayoría de navegadores
+        this.fogNode.append(fogVideo);
 
         this.resources = resources;
         this.producerAreas = [];
@@ -79,10 +87,10 @@ export class GameIncursion extends Game{
         }
         // this.createBuildings();
 
-        this.bgMusicNode!.src = "./sfx/backgroundMusic-incursion-Emmraan.mp3";
-        this.bgMusicNode!.loop = true;
-        // this.bgMusicNode!.autoplay = true;
-        this.bgMusicNode!.volume = 0.01;
+        this.bgMusicNode.src = "./sfx/backgroundMusic-incursion-Emmraan.mp3";
+        this.bgMusicNode.loop = true;
+        // this.bgMusicNode.autoplay = true;
+        this.bgMusicNode.volume = 0.01;
 
         setTimeout(this.createArea, 100);
         setTimeout(this.createArea, this.randomIntegerRange(5000, 1000));
@@ -117,14 +125,14 @@ export class GameIncursion extends Game{
         const x = this.randomIntegerRange(this.baseNode.offsetWidth - w, 0);
         const y = this.randomIntegerRange(this.baseNode.offsetHeight - 2 * h, 0);
         const dSize = Math.random() * varSize - varSize / 2 + 1;
-        const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)];
+        const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)] as Resource;
         const amountRate = this.randomIntegerRange(20, 5) * dSize;
-        const newArea = new House(x, y, w * dSize, h * dSize, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate!, amountRate, 1);
+        const newArea = new House(x, y, w * dSize, h * dSize, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate, amountRate, 1);
         newArea.node.style.width = `${newArea.w}px`;
         newArea.node.style.height = `${newArea.h}px`;
         newArea.node.classList.add("area-producer");
         newArea.node.classList.add(`${resourceToGenerate}-producer`);
-        newArea.node.innerText = resourceToGenerate!;
+        newArea.node.innerText = resourceToGenerate;
         newArea.render();
         this.producerAreas.push(newArea);
         this.baseNode.append(newArea.node);
@@ -142,19 +150,19 @@ export class GameIncursion extends Game{
         }
     }
 
-    spawnEnemy = () => {
+    spawnEnemy = (): void => {
         this.enemies.push(new Enemy(32, 53, this.baseNode, this.randomIntegerRange(3, 1), this));
     };
 
-    checkDespawnEnemy = () => {
+    checkDespawnEnemy = (): void => {
         if (this.enemies[0]?.shouldBeDeleted) {
             this.enemies[0].node.remove();
             this.enemies.shift();
         }
     };
 
-    updateMistOfWar = () => {
-        const mistRadius = (this.resources.get(METALS_RESOURCES.TIN)! > 0) ? "600px" : "300px";
+    updateMistOfWar = (): void => {
+        const mistRadius = ((this.resources.get(METALS_RESOURCES.TIN) ?? 0) > 0) ? "600px" : "300px";
         this.fogNode.style.setProperty("--mist-radius", `${mistRadius}`);
         this.fogNode.style.setProperty("--mist-x", `${this.playerCharacter.x.toString()}px`);
         this.fogNode.style.setProperty("--mist-y", `${this.playerCharacter.y.toString()}px`);
@@ -212,8 +220,8 @@ export class GameIncursion extends Game{
             //     let newAmount = (amount - 1) < 0 ? 0 : amount - 1;
             //     this.resources.set(resource, newAmount);
             // }
-            const tin = this.resources.get(METALS_RESOURCES.TIN)!;
-            this.resources.set(METALS_RESOURCES.TIN, tin - 1);
+            const tin = this.resources.get(METALS_RESOURCES.TIN) ?? 0;
+            this.resources.set(METALS_RESOURCES.TIN, Math.max(tin - 1,0));
         }
         this.updateResourcesMenu();
     };

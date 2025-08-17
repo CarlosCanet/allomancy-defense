@@ -13,6 +13,7 @@ export class GameIdle extends Game {
     ticksGeneratingIteration: number;
     maxSecondsUntilNextIncursion: number;
     buildings: Array<House>;
+    buildabilityStatus: Map<string, boolean>;
     
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
         super(gameBoxNode, gameFrequency);
@@ -30,6 +31,7 @@ export class GameIdle extends Game {
         this.ticksGeneratingIteration = 0;
         this.maxSecondsUntilNextIncursion = 60;
         this.buildings = [];
+        this.buildabilityStatus = new Map();
         this.buildingsMenuSectionNode.titleNode.innerText = `Buildings (${this.buildings.length}/16)`;
         this.shouldStartIncursion = false;
     }
@@ -38,7 +40,7 @@ export class GameIdle extends Game {
         this.gameBoxNode.innerHTML = "";
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
-        this.gameBoxNode.append(this.bgMusicNode!);
+        this.gameBoxNode.append(this.bgMusicNode);
         const h2Node = document.createElement("h2");
         h2Node.innerText = "Menu";
         this.menuNode.append(h2Node);
@@ -55,11 +57,12 @@ export class GameIdle extends Game {
             this.resources.set(resource, amount);
             this.resourcesMenuSectionNode.addElement(resource, resource, 0);
         });
+
         for (let index = 0; index < 16; index++){
             let houseClassName = localStorage.getItem(`building-${index}`);
             if (houseClassName) {
                 const HouseClass = HousesMap[houseClassName];
-                this.addBuilding(HouseClass!);
+                HouseClass && this.addBuilding(HouseClass);
             }
         }
         this.addBuildingButton(HouseVenture);
@@ -67,6 +70,8 @@ export class GameIdle extends Game {
         this.addBuildingButton(HouseLekal);
         this.addBuildingButton(HouseHasting);
         this.addBuildingButton(HouseElariel);
+        this.checkAndUpdateBuildabilityMap();
+
         this.startIncursionBtnNode.innerText = "Start incursion";
         this.startIncursionBtnNode.id = "start-incursion-btn";
         this.startIncursionBtnNode.addEventListener("click", () => this.shouldStartIncursion = true);
@@ -81,12 +86,11 @@ export class GameIdle extends Game {
     addBuildingButton = (HouseClass: HouseConstructor): void => {
         const houseName = HouseClass.getHouseName();
         this.buildingsMenuSectionNode.addElement(houseName, HouseClass.houseName, HouseClass.howManyBuildings, "click", () => this.buyBuilding(HouseClass));
-        this.buildingsMenuSectionNode.createResourcesCost(houseName, HouseClass.costToBuild(), this.resources);
     }
 
     addBuilding = (HouseSubclass: HouseConstructor): void => {
         if (this.buildings.length < 16) {
-            const newBuilding = new HouseSubclass(document.createElement("div"));
+            const newBuilding = new HouseSubclass(document.createElement("div"), this.baseNode);
             newBuilding.updateTickStartProducing(this.tick);
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
@@ -95,7 +99,6 @@ export class GameIdle extends Game {
             this.buildingsMenuSectionNode.updateAmount(`${HouseSubclass.getHouseName()}`, HouseSubclass.howManyBuildings);
             const buildingTitle = this.buildingsMenuSectionNode.titleNode.innerText.split(" ")[0];
             this.buildingsMenuSectionNode.titleNode.innerText = `${buildingTitle} (${this.buildings.length}/16)`;
-            this.buildingsMenuSectionNode.createResourcesCost(newBuilding.constructor.name, HouseSubclass.costToBuild(), this.resources);
         }
     }
 
@@ -111,20 +114,8 @@ export class GameIdle extends Game {
         }
     }
 
-    canBuyBuilding = (HouseSubclass: HouseConstructor): boolean => {
-        let canBuy = true;
-        const resourcesCost = HouseSubclass.costToBuild();
-        for (const [resource, amount] of resourcesCost) {
-            if (amount > this.resources.get(resource)!) {
-                canBuy = false;
-                break;
-            }
-        }
-        return canBuy;
-    }
-
     buyBuilding = (HouseSubclass: HouseConstructor): void => {
-        if (this.canBuyBuilding(HouseSubclass)) {
+        if (HouseSubclass.canBuildNewOne(this.resources)) {
             const resourcesCost = HouseSubclass.costToBuild();
             for (const [resource, amount] of resourcesCost.entries()) {
                 const myResourcesValue = this.resources.get(resource);
@@ -133,6 +124,8 @@ export class GameIdle extends Game {
                 }
             }
             this.addBuilding(HouseSubclass);
+            HouseSubclass.updateButtonDOM(this.resources);
+            this.checkAndUpdateBuildabilityMap();
         }
     }
 
@@ -144,9 +137,24 @@ export class GameIdle extends Game {
             let newAmount = amount / 3 * penaltyLevel;
             this.resources.set(resource, newAmount < 0 ? 0 : newAmount);
         }
+        this.checkAndUpdateBuildabilityMap();
     }
 
-    restartTimeSinceIncursion = () => {
+    checkAndUpdateBuildabilityMap = (): void => {
+        for (const HouseClass of Object.values(HousesMap)) {
+            const houseName = HouseClass.getHouseName();
+            const previousStatus = this.buildabilityStatus.get(houseName) ?? false;
+            const currentStatus = HouseClass.canBuildNewOne(this.resources);
+            
+            if (previousStatus !== currentStatus ) {
+                HouseClass.updateButtonDOM(this.resources);
+            }
+            this.buildabilityStatus.set(houseName, currentStatus);
+        } 
+    }
+
+    restartTimeSinceIncursion = (tick: number): void => {
+        this.tick = tick;
         this.ticksGeneratingIteration = this.tick;
         this.buildings.forEach(building => building.updateTickStartProducing(this.tick));
     }
@@ -178,11 +186,12 @@ export class GameIdle extends Game {
 
         // Free resources (coins)
         // if (this.hasPassedAPeriod(tick, 2)) {
-        //     this.resources.set(OTHER_RESOURCES.COINS, this.resources.get(OTHER_RESOURCES.COINS)! + 10);            
+        //     this.resources.set(OTHER_RESOURCES.COINS, (this.resources.get(OTHER_RESOURCES.COINS) ?? 0) + 10);            
         // }
         
         // Update UI
         this.updateResourcesMenu();
+        this.checkAndUpdateBuildabilityMap();
 
         // Save resources in local storage each 5 secs
         if (this.hasPassedAPeriod(tick, 5)) {
