@@ -29,6 +29,13 @@ export class GameIncursion extends Game {
         // this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li"); // TODO Allies
         this.fogNode = document.createElement("div");
         this.fogNode.classList.add("fog");
+        // Crear el elemento de video para la niebla
+        const fogVideo = document.createElement("video");
+        fogVideo.src = "../images/MistLoop.mp4"; // Asegúrate de que la ruta a tu video es correcta
+        fogVideo.autoplay = true;
+        fogVideo.loop = true;
+        fogVideo.muted = true; // Esencial para que el autoplay funcione en la mayoría de navegadores
+        this.fogNode.append(fogVideo);
         this.resources = resources;
         this.producerAreas = [];
         this.enemies = [];
@@ -192,7 +199,7 @@ export class GameIncursion extends Game {
             //     this.resources.set(resource, newAmount);
             // }
             const tin = this.resources.get(METALS_RESOURCES.TIN) ?? 0;
-            this.resources.set(METALS_RESOURCES.TIN, tin - 1);
+            this.resources.set(METALS_RESOURCES.TIN, Math.max(tin - 1, 0));
         }
         this.updateResourcesMenu();
     };
