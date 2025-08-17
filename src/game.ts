@@ -1,4 +1,4 @@
-import { ALL_RESOURCES, RESOURCE_IMAGES, RESOURCES, type Resource } from "./allomancyDefenseGame.js";
+import { RESOURCE_IMAGES, RESOURCES, type Resource } from "./allomancyDefenseGame.js";
 import type { Building } from "./building.js";
 
 export type ResourceMap = Map<Resource, number>;

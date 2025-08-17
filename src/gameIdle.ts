@@ -9,8 +9,9 @@ export class GameIdle extends Game {
     // alliesMenuSectionNode: MenuSection;  // TODO future allies
     shouldStartIncursion: boolean;
     startIncursionBtnNode: HTMLButtonElement;
+    tick: number;
     ticksGeneratingIteration: number;
-    maxSecondsUntilIncursion: number;
+    maxSecondsUntilNextIncursion: number;
     buildings: Array<House>;
     
     constructor(gameBoxNode: HTMLDivElement, gameFrequency: number) {
@@ -25,8 +26,9 @@ export class GameIdle extends Game {
         // this.alliesMenuSectionNode = new MenuSection("Allies", "allies-li");  // TODO future allies
         this.startIncursionBtnNode = document.createElement("button");
         
+        this.tick = 0;
         this.ticksGeneratingIteration = 0;
-        this.maxSecondsUntilIncursion = 60;
+        this.maxSecondsUntilNextIncursion = 60;
         this.buildings = [];
         this.buildingsMenuSectionNode.titleNode.innerText = `Buildings (${this.buildings.length}/16)`;
         this.shouldStartIncursion = false;
@@ -85,21 +87,15 @@ export class GameIdle extends Game {
     addBuilding = (HouseSubclass: HouseConstructor): void => {
         if (this.buildings.length < 16) {
             const newBuilding = new HouseSubclass(document.createElement("div"));
+            newBuilding.updateTickStartProducing(this.tick);
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
             newBuilding.node.innerHTML = `<p>${(newBuilding.constructor as typeof House).houseName}</p>
-            <br><p class="building-rate">+${newBuilding.amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[newBuilding.resource].slice(1)} height="15px"/>/s</p>`;
+            <br><p class="building-rate">+${newBuilding.maxAmountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[newBuilding.resource].slice(1)} height="15px"/>/s</p>`;
             this.buildingsMenuSectionNode.updateAmount(`${HouseSubclass.getHouseName()}`, HouseSubclass.howManyBuildings);
             const buildingTitle = this.buildingsMenuSectionNode.titleNode.innerText.split(" ")[0];
             this.buildingsMenuSectionNode.titleNode.innerText = `${buildingTitle} (${this.buildings.length}/16)`;
             this.buildingsMenuSectionNode.createResourcesCost(newBuilding.constructor.name, HouseSubclass.costToBuild(), this.resources);
-        }
-    }
-
-    updateRateBuilding = (building: House, amountRate: number): void => {
-        const buildingNode = building.node.querySelector(".building-rate");
-        if (buildingNode) {
-            buildingNode.innerHTML = `+${amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[building.resource].slice(1)} height="15px"/>/s`;
         }
     }
 
@@ -150,6 +146,11 @@ export class GameIdle extends Game {
         }
     }
 
+    restartTimeSinceIncursion = () => {
+        this.ticksGeneratingIteration = this.tick;
+        this.buildings.forEach(building => building.updateTickStartProducing(this.tick));
+    }
+
     saveGameIdleInLocalStorage = (): void => {
         for (const [resource, amount] of this.resources) {
             localStorage.setItem(resource, amount.toString());
@@ -158,6 +159,9 @@ export class GameIdle extends Game {
     }
 
     gameLoop = (tick: number): void => {
+        // Updating internal tick
+        this.tick = tick;
+
         // Buildings generate resources
         this.ticksGeneratingIteration++;
         this.buildings.forEach(house => {
@@ -165,12 +169,9 @@ export class GameIdle extends Game {
             if (this.hasPassedAPeriod(tick, house.periodInSec)) {
                 let amount = this.resources.get(house.resource);
                 if (amount !== undefined) {
-                    let secondsGenerating = this.ticksGeneratingIteration / 1000 * this.gameFrequency;
-                    let penaltyRate = house.amountRate / this.maxSecondsUntilIncursion * secondsGenerating;
-                    let rate = house.amountRate - penaltyRate;
-                    rate = (rate < 0) ? 0 : rate;
-                    this.resources.set(house.resource, amount + rate);
-                    this.updateRateBuilding(house, rate);
+                    house.updateRate(tick, this.gameFrequency, this.maxSecondsUntilNextIncursion);
+                    house.updateRateDOM();
+                    this.resources.set(house.resource, amount + house.amountRate);
                 }
             }
         })

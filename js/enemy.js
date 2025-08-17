@@ -1,5 +1,5 @@
-import { Character } from "./character.js";
-export class Enemy extends Character {
+import { Player } from "./player.js";
+export class Enemy extends Player {
     shouldBeDeleted = false;
     constructor(w, h, gameBoxNode, speed, gameIncursion) {
         super(0, 0, w, h, document.createElement("div"), gameBoxNode, speed, speed, false, gameIncursion);
