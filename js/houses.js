@@ -29,6 +29,17 @@ export class House extends Building {
         totalCost.set(OTHER_RESOURCES.COINS, Math.floor(baseCost * coefficient ** this.howManyBuildings));
         return totalCost;
     }
+    static canBuildNewOne(actualResources) {
+        let canBuy = true;
+        const resourcesCost = this.costToBuild();
+        for (const [resource, amount] of resourcesCost) {
+            if (amount > actualResources.get(resource)) {
+                canBuy = false;
+                break;
+            }
+        }
+        return canBuy;
+    }
     static getHouseName() {
         return this.houseName.replaceAll(" ", "");
     }
@@ -59,8 +70,28 @@ export class House extends Building {
         return `<p><span id="amount">${ctor.howManyBuildings}</span> <span>${ctor.getHouseName()}</span> <img src="${RESOURCE_IMAGES[this.resource].slice(1)}"/></p>
         <ul class="building-cost" id="${this.name}-cost"></ul>`;
     };
-    updateButtonDOM = () => {
-    };
+    static updateButtonDOM(actualResources) {
+        const buildingListNode = document.querySelector(`#${this.getHouseName()}-cost`);
+        if (buildingListNode) {
+            const costResources = this.costToBuild();
+            buildingListNode.innerHTML = "";
+            for (const [resource, amount] of actualResources) {
+                const liNode = document.createElement("li");
+                const resourceImg = document.createElement("img");
+                const amountSpan = document.createElement("span");
+                resourceImg.src = RESOURCE_IMAGES[resource].slice(1);
+                resourceImg.width = 15;
+                let costAmount = costResources.get(resource) ?? 0;
+                if (costAmount > amount) {
+                    liNode.classList.add("missing");
+                }
+                amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
+                liNode.append(resourceImg);
+                liNode.append(amountSpan);
+                buildingListNode.append(liNode);
+            }
+        }
+    }
 }
 export class HouseVenture extends House {
     static houseName = "House Venture";

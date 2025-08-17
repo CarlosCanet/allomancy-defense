@@ -8,6 +8,8 @@ export interface HouseConstructor {
     howManyBuildings: number;
     getHouseName(): string;
     costToBuild(): ResourceMap;
+    canBuildNewOne(actualResources: ResourceMap): boolean;
+    updateButtonDOM(actualResources: ResourceMap): void;
 }
 
 export class House extends Building {
@@ -42,9 +44,22 @@ export class House extends Building {
         return totalCost;
     }
 
+    static canBuildNewOne(actualResources: ResourceMap): boolean {
+        let canBuy = true;
+        const resourcesCost = this.costToBuild();
+        for (const [resource, amount] of resourcesCost) {
+            if (amount > actualResources.get(resource)!) {
+                canBuy = false;
+                break;
+            }
+        }
+        return canBuy;
+    }
+
     static getHouseName(): string {
         return this.houseName.replaceAll(" ", "");
     }
+
 
     destroyHouse = () => {
         const ctor = this.constructor as typeof House;
@@ -81,8 +96,31 @@ export class House extends Building {
         <ul class="building-cost" id="${this.name}-cost"></ul>`
     }
 
-    updateButtonDOM = () => {
+    static updateButtonDOM(actualResources: ResourceMap): void {
+        const buildingListNode = document.querySelector(`#${this.getHouseName()}-cost`) as HTMLUListElement;
+        if (buildingListNode) {
+            const costResources = this.costToBuild();
+            buildingListNode.innerHTML = "";
+            for (const [resource, amount] of actualResources) {
+                const liNode = document.createElement("li");
+                const resourceImg = document.createElement("img");
+                const amountSpan = document.createElement("span");
 
+                resourceImg.src = RESOURCE_IMAGES[resource].slice(1);
+                resourceImg.width = 15;
+
+                let costAmount = costResources.get(resource) ?? 0;
+                if (costAmount > amount) {
+                    liNode.classList.add("missing");
+                }
+
+                amountSpan.innerText = (costAmount !== undefined) ? costAmount.toString() : "0";
+                
+                liNode.append(resourceImg);
+                liNode.append(amountSpan);
+                buildingListNode.append(liNode);
+            }
+        }
     }
 
 }
