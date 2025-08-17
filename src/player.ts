@@ -40,7 +40,7 @@ export class Player extends GameObject {
         }
     }
 
-    handleKeys = (event: KeyboardEvent) => {
+    handleKeys = (event: KeyboardEvent): void => {
         if (event.key === "w" || event.key === "ArrowUp") {
             this.createSpriteArray("./images/characters/adventurerFemale/adventurerFemale-walkup", "png", 8);
             this.moveUp(this.isPlayer);
@@ -56,14 +56,14 @@ export class Player extends GameObject {
         }
     };
 
-    handleClick = (event: MouseEvent) => {
+    handleClick = (event: MouseEvent): void => {
         this.checkCanShootProjectile();
         if (this.canShoot) {
             this.coinSFXNode.play();
             this.createProjectile(event.layerX, event.layerY);
             this.canShoot = false;
             for (const [resource, amount] of this.shootCost) {
-                let actualAmount = this.gameIncursion.resources.get(resource)!;
+                let actualAmount = this.gameIncursion.resources.get(resource) ?? 0;
                 this.gameIncursion.resources.set(resource, actualAmount - amount);
             }
             setTimeout(() => this.canShoot = true, this.timeBetweenShoots);
@@ -73,14 +73,14 @@ export class Player extends GameObject {
     checkCanShootProjectile = (): void => {
         this.canShoot = true;
         for (const [resource, amount] of this.shootCost) {
-            if (amount > this.gameIncursion.resources.get(resource)!) {
+            if (amount > (this.gameIncursion.resources.get(resource) ?? 0)) {
                 this.canShoot = false;
                 break;
             }
         }
     }
 
-    createProjectile = (directionX: number, directionY: number) => {
+    createProjectile = (directionX: number, directionY: number): void => {
         const projectileHeight = 10, projectileWidth = 10;
         const speedX = 6, speedY = 6;
         const newProjectile = new Projectile(this.x + this.w / 2 - projectileWidth/2, this.y + this.h / 2 - projectileHeight/2, projectileWidth, projectileHeight, speedX, speedY, document.createElement("div"), this.gameBoxNode, directionX, directionY);
@@ -88,7 +88,7 @@ export class Player extends GameObject {
         this.gameBoxNode.append(newProjectile.node);
     };
 
-    cleanProjectiles = () => {
+    cleanProjectiles = (): void => {
         this.projectiles = this.projectiles.filter(projectile => !projectile.isOnTarget);
     }
 }

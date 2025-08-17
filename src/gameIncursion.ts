@@ -142,18 +142,18 @@ export class GameIncursion extends Game{
         }
     }
 
-    spawnEnemy = () => {
+    spawnEnemy = (): void => {
         this.enemies.push(new Enemy(32, 53, this.baseNode, this.randomIntegerRange(3, 1), this));
     };
 
-    checkDespawnEnemy = () => {
+    checkDespawnEnemy = (): void => {
         if (this.enemies[0]?.shouldBeDeleted) {
             this.enemies[0].node.remove();
             this.enemies.shift();
         }
     };
 
-    updateMistOfWar = () => {
+    updateMistOfWar = (): void => {
         const mistRadius = (this.resources.get(METALS_RESOURCES.TIN)! > 0) ? "600px" : "300px";
         this.fogNode.style.setProperty("--mist-radius", `${mistRadius}`);
         this.fogNode.style.setProperty("--mist-x", `${this.playerCharacter.x.toString()}px`);

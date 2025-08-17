@@ -13,15 +13,15 @@ export class Enemy extends Player {
         this.spawnEnemy();
     }
 
-    addSpritesLeft = () => {
+    addSpritesLeft = (): void => {
         this.createSpriteArray("./images/characters/guard/soldier-walk-left", "png", 15);
     }
     
-    addSpritesRight = () => {
+    addSpritesRight = (): void => {
         this.createSpriteArray("./images/characters/guard/soldier-walk-right", "png", 15);
     }
 
-    spawnEnemy = () => {
+    spawnEnemy = (): void => {
         const option = Math.floor(Math.random() * 4);
         const offset = 100;
         switch (option) {

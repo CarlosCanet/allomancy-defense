@@ -90,7 +90,7 @@ export class GameIdle extends Game {
 
     addBuilding = (HouseSubclass: HouseConstructor): void => {
         if (this.buildings.length < 16) {
-            const newBuilding = new HouseSubclass(document.createElement("div"));
+            const newBuilding = new HouseSubclass(document.createElement("div"), this.baseNode);
             newBuilding.updateTickStartProducing(this.tick);
             this.buildings.push(newBuilding);
             this.baseNode.append(newBuilding.node);
@@ -153,7 +153,7 @@ export class GameIdle extends Game {
         } 
     }
 
-    restartTimeSinceIncursion = (tick: number) => {
+    restartTimeSinceIncursion = (tick: number): void => {
         this.tick = tick;
         this.ticksGeneratingIteration = this.tick;
         this.buildings.forEach(building => building.updateTickStartProducing(this.tick));

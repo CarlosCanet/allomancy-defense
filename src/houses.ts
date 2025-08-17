@@ -61,16 +61,16 @@ export class House extends Building {
     }
 
 
-    destroyHouse = () => {
+    destroyHouse = (): void => {
         const ctor = this.constructor as typeof House;
         ctor.howManyBuildings--;
     }
 
-    updateTickStartProducing = (tick: number) => {
+    updateTickStartProducing = (tick: number): void => {
         this.tickStartProducing = tick;
     }
 
-    updateRate = (actualTick: number, gameFrequency: number, maxSecondsUntilIncursion: number) => {
+    updateRate = (actualTick: number, gameFrequency: number, maxSecondsUntilIncursion: number): void => {
         const ticksGeneratingIteration = actualTick - this.tickStartProducing;
         const secondsGenerating = ticksGeneratingIteration / 1000 * gameFrequency;
         const penaltyRate = this.maxAmountRate / maxSecondsUntilIncursion * secondsGenerating;
@@ -78,14 +78,14 @@ export class House extends Building {
         this.amountRate = (rate < 0) ? 0 : rate;
     }
 
-    updateRateDOM = () => {
+    updateRateDOM = (): void => {
         const buildingNode = this.node.querySelector(".building-rate");
         if (buildingNode) {
             buildingNode.innerHTML = `+${this.amountRate.toFixed(2)} <img src=${RESOURCE_IMAGES[this.resource].slice(1)} height="15px"/>/s`;
         }
     }
 
-    createBuildingDOM = () => {
+    createBuildingDOM = (): void => {
        
     }
 
