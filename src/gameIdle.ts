@@ -40,7 +40,7 @@ export class GameIdle extends Game {
         this.gameBoxNode.innerHTML = "";
         this.gameBoxNode.append(this.menuNode);
         this.gameBoxNode.append(this.baseNode);
-        this.gameBoxNode.append(this.bgMusicNode!);
+        this.gameBoxNode.append(this.bgMusicNode);
         const h2Node = document.createElement("h2");
         h2Node.innerText = "Menu";
         this.menuNode.append(h2Node);
@@ -62,7 +62,7 @@ export class GameIdle extends Game {
             let houseClassName = localStorage.getItem(`building-${index}`);
             if (houseClassName) {
                 const HouseClass = HousesMap[houseClassName];
-                this.addBuilding(HouseClass!);
+                HouseClass && this.addBuilding(HouseClass);
             }
         }
         this.addBuildingButton(HouseVenture);
@@ -186,7 +186,7 @@ export class GameIdle extends Game {
 
         // Free resources (coins)
         // if (this.hasPassedAPeriod(tick, 2)) {
-        //     this.resources.set(OTHER_RESOURCES.COINS, this.resources.get(OTHER_RESOURCES.COINS)! + 10);            
+        //     this.resources.set(OTHER_RESOURCES.COINS, (this.resources.get(OTHER_RESOURCES.COINS) ?? 0) + 10);            
         // }
         
         // Update UI

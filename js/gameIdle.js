@@ -57,7 +57,7 @@ export class GameIdle extends Game {
             let houseClassName = localStorage.getItem(`building-${index}`);
             if (houseClassName) {
                 const HouseClass = HousesMap[houseClassName];
-                this.addBuilding(HouseClass);
+                HouseClass && this.addBuilding(HouseClass);
             }
         }
         this.addBuildingButton(HouseVenture);
@@ -167,7 +167,7 @@ export class GameIdle extends Game {
         });
         // Free resources (coins)
         // if (this.hasPassedAPeriod(tick, 2)) {
-        //     this.resources.set(OTHER_RESOURCES.COINS, this.resources.get(OTHER_RESOURCES.COINS)! + 10);            
+        //     this.resources.set(OTHER_RESOURCES.COINS, (this.resources.get(OTHER_RESOURCES.COINS) ?? 0) + 10);            
         // }
         // Update UI
         this.updateResourcesMenu();

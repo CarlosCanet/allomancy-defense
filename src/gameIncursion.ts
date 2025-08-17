@@ -1,7 +1,7 @@
 import { Building } from "./building.js";
 import { Player } from "./player.js";
 import { Enemy } from "./enemy.js";
-import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES } from "./allomancyDefenseGame.js";
+import { METALS_RESOURCES, OTHER_RESOURCES, RESOURCES, type Resource } from "./allomancyDefenseGame.js";
 import { House } from "./houses.js";
 import { Game, MenuSection, type ResourceMap } from "./game.js";
 
@@ -79,10 +79,10 @@ export class GameIncursion extends Game{
         }
         // this.createBuildings();
 
-        this.bgMusicNode!.src = "./sfx/backgroundMusic-incursion-Emmraan.mp3";
-        this.bgMusicNode!.loop = true;
-        // this.bgMusicNode!.autoplay = true;
-        this.bgMusicNode!.volume = 0.01;
+        this.bgMusicNode.src = "./sfx/backgroundMusic-incursion-Emmraan.mp3";
+        this.bgMusicNode.loop = true;
+        // this.bgMusicNode.autoplay = true;
+        this.bgMusicNode.volume = 0.01;
 
         setTimeout(this.createArea, 100);
         setTimeout(this.createArea, this.randomIntegerRange(5000, 1000));
@@ -117,14 +117,14 @@ export class GameIncursion extends Game{
         const x = this.randomIntegerRange(this.baseNode.offsetWidth - w, 0);
         const y = this.randomIntegerRange(this.baseNode.offsetHeight - 2 * h, 0);
         const dSize = Math.random() * varSize - varSize / 2 + 1;
-        const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)];
+        const resourceToGenerate = RESOURCES[this.randomIntegerRange(RESOURCES.length, 0)] as Resource;
         const amountRate = this.randomIntegerRange(20, 5) * dSize;
-        const newArea = new House(x, y, w * dSize, h * dSize, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate!, amountRate, 1);
+        const newArea = new House(x, y, w * dSize, h * dSize, document.createElement("div"), this.gameBoxNode, "", resourceToGenerate, amountRate, 1);
         newArea.node.style.width = `${newArea.w}px`;
         newArea.node.style.height = `${newArea.h}px`;
         newArea.node.classList.add("area-producer");
         newArea.node.classList.add(`${resourceToGenerate}-producer`);
-        newArea.node.innerText = resourceToGenerate!;
+        newArea.node.innerText = resourceToGenerate;
         newArea.render();
         this.producerAreas.push(newArea);
         this.baseNode.append(newArea.node);
@@ -154,7 +154,7 @@ export class GameIncursion extends Game{
     };
 
     updateMistOfWar = (): void => {
-        const mistRadius = (this.resources.get(METALS_RESOURCES.TIN)! > 0) ? "600px" : "300px";
+        const mistRadius = ((this.resources.get(METALS_RESOURCES.TIN) ?? 0) > 0) ? "600px" : "300px";
         this.fogNode.style.setProperty("--mist-radius", `${mistRadius}`);
         this.fogNode.style.setProperty("--mist-x", `${this.playerCharacter.x.toString()}px`);
         this.fogNode.style.setProperty("--mist-y", `${this.playerCharacter.y.toString()}px`);
@@ -212,7 +212,7 @@ export class GameIncursion extends Game{
             //     let newAmount = (amount - 1) < 0 ? 0 : amount - 1;
             //     this.resources.set(resource, newAmount);
             // }
-            const tin = this.resources.get(METALS_RESOURCES.TIN)!;
+            const tin = this.resources.get(METALS_RESOURCES.TIN) ?? 0;
             this.resources.set(METALS_RESOURCES.TIN, tin - 1);
         }
         this.updateResourcesMenu();

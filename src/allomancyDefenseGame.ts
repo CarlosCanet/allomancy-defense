@@ -6,7 +6,7 @@ export enum GameStates { WaitingToStart, BaseBuilding, Incursioning, GameOver }
 export const METALS_RESOURCES = { STEEL: "Steel", BRONZE: "Bronze", COPPER: "Copper", TIN: "Tin" } as const;
 export const OTHER_RESOURCES = { COINS: "Coins" } as const;
 export const ALL_RESOURCES = { ...METALS_RESOURCES, ...OTHER_RESOURCES } as const;
-export const RESOURCES = [...Object.values(ALL_RESOURCES)];
+export const RESOURCES = [...Object.values(ALL_RESOURCES)] as const;
 export type Resource = (typeof RESOURCES)[number];
 export type Metal = (typeof METALS_RESOURCES)[keyof typeof METALS_RESOURCES];
 export const RESOURCE_IMAGES: Record<Resource, string> = {
@@ -149,15 +149,15 @@ export class AllomancyDefenseGame {
 
     startIncursion = (): void => {
         this.gameState = GameStates.Incursioning;
-        this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle!.resources);
-        this.gameIdle!.shouldStartIncursion = false;
-        this.gameIncursion.createIncursionUI();
+        this.gameIdle && (this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle.resources));
+        this.gameIdle && (this.gameIdle.shouldStartIncursion = false);
+        this.gameIncursion && (this.gameIncursion.createIncursionUI());
         this.showIncursionScreen();
     };
 
     finishIncursion = (): void => {
         this.gameIncursion = null;
-        this.gameIdle!.restartTimeSinceIncursion(this.tick);
+        this.gameIdle && this.gameIdle.restartTimeSinceIncursion(this.tick);
         this.showBaseScreen();
     }
 

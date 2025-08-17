@@ -133,14 +133,14 @@ export class AllomancyDefenseGame {
     };
     startIncursion = () => {
         this.gameState = GameStates.Incursioning;
-        this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle.resources);
-        this.gameIdle.shouldStartIncursion = false;
-        this.gameIncursion.createIncursionUI();
+        this.gameIdle && (this.gameIncursion = new GameIncursion(this.screenNodes.incursionGameBoxNode, this.gameFrequency, this.gameIdle.resources));
+        this.gameIdle && (this.gameIdle.shouldStartIncursion = false);
+        this.gameIncursion && (this.gameIncursion.createIncursionUI());
         this.showIncursionScreen();
     };
     finishIncursion = () => {
         this.gameIncursion = null;
-        this.gameIdle.restartTimeSinceIncursion(this.tick);
+        this.gameIdle && this.gameIdle.restartTimeSinceIncursion(this.tick);
         this.showBaseScreen();
     };
     showStartScreen = () => {

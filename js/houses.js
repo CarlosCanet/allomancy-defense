@@ -33,7 +33,7 @@ export class House extends Building {
         let canBuy = true;
         const resourcesCost = this.costToBuild();
         for (const [resource, amount] of resourcesCost) {
-            if (amount > actualResources.get(resource)) {
+            if (amount > (actualResources.get(resource) ?? 0)) {
                 canBuy = false;
                 break;
             }

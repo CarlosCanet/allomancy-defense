@@ -73,7 +73,7 @@ export class GameIncursion extends Game {
         // this.createBuildings();
         this.bgMusicNode.src = "./sfx/backgroundMusic-incursion-Emmraan.mp3";
         this.bgMusicNode.loop = true;
-        // this.bgMusicNode!.autoplay = true;
+        // this.bgMusicNode.autoplay = true;
         this.bgMusicNode.volume = 0.01;
         setTimeout(this.createArea, 100);
         setTimeout(this.createArea, this.randomIntegerRange(5000, 1000));
@@ -138,7 +138,7 @@ export class GameIncursion extends Game {
         }
     };
     updateMistOfWar = () => {
-        const mistRadius = (this.resources.get(METALS_RESOURCES.TIN) > 0) ? "600px" : "300px";
+        const mistRadius = ((this.resources.get(METALS_RESOURCES.TIN) ?? 0) > 0) ? "600px" : "300px";
         this.fogNode.style.setProperty("--mist-radius", `${mistRadius}`);
         this.fogNode.style.setProperty("--mist-x", `${this.playerCharacter.x.toString()}px`);
         this.fogNode.style.setProperty("--mist-y", `${this.playerCharacter.y.toString()}px`);
@@ -191,7 +191,7 @@ export class GameIncursion extends Game {
             //     let newAmount = (amount - 1) < 0 ? 0 : amount - 1;
             //     this.resources.set(resource, newAmount);
             // }
-            const tin = this.resources.get(METALS_RESOURCES.TIN);
+            const tin = this.resources.get(METALS_RESOURCES.TIN) ?? 0;
             this.resources.set(METALS_RESOURCES.TIN, tin - 1);
         }
         this.updateResourcesMenu();
