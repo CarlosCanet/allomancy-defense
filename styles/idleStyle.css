@@ -1,171 +1,172 @@
 #base-game-box {
-    background-image: url("../images/Bg1.jpeg");
-    background-size: cover;
+  background-image: url("../images/Bg1.jpeg");
+  background-size: cover;
 }
 
 #menu-base {
-    opacity: 100%;
+  opacity: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  width: 20%;
+  height: 100%;
+  padding: 20px;
+  backdrop-filter: brightness(75%) sepia(100%) hue-rotate(280deg);
+  font-family: "Rubik dirt";
+  /* border-right: solid 5px black; */
+
+  #menu-base-list {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: flex-start;
-    width: 20%;
-    height: 100%;
-    padding: 20px;
-    backdrop-filter: brightness(75%) sepia(100%) hue-rotate(280deg);
-    font-family: "Rubik dirt";
-    /* border-right: solid 5px black; */
+    justify-content: space-evenly;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
 
-    #menu-base-list {
-        display: flex;
-        justify-content: space-evenly;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 20px;
-
-        h2 {
-          /* opacity: 50%; */
-          color: white;
-          font-weight: 100;
-        }
-
-        li {
-            color: white;
-            padding: 5px;
-            font-family: "Special elite";
-            font-weight: 100;
-            height: 30px;
-        }
-
-        #Resources-ul{
-          
-
-          .resources-li{
-            padding: 3px 10px 0px 10px;
-            width: 120px;
-            font-size: 0.85em;
-            /* background-color: cadetblue; */
-            
-            border: solid 2px rgba(50, 50, 50, 0.9);
-            background-size: cover;
-            border-radius: 25px;
-            display: flex;
-            gap: 5px;
-            justify-content: space-between;
-            align-items: center;
-  
-            &#Steel-btn{
-              background-image: url("../images/resources/Bg-resource-steel.png");
-            }
-            &#Bronze-btn{
-              background-image: url("../images/resources/Bg-resource-bronze.png");
-            }
-            &#Copper-btn{
-              background-image: url("../images/resources/Bg-resource-copper.png");
-            }
-            &#Tin-btn{
-              background-image: url("../images/resources/Bg-resource-tin.png");
-            }
-            &#Coins-btn{
-              background-image: url("../images/resources/Bg-resource-coins.png");
-            }
-          }
-        }
-
-        
-
-        #Buildings-ul{
-          .buildings-li{
-            /* padding: 5px; */
-            /* min-width: 80px; */
-            width: 100%;
-            height: 100%;
-            font-size: 1em;
-            text-align: center;
-            padding: 10px;
-            background-size: cover;
-            background-position: center left;
-            border-radius: 5px;
-            border: solid 2px rgba(50, 50, 50, 0.9);
-            
-            &#HouseVenture-btn{
-              background-image: url("../images/resources/Bg-resource-steel.png");
-            }
-            &#HouseCett-btn{
-              background-image: url("../images/resources/Bg-resource-bronze.png");
-            }
-            &#HouseLekal-btn{
-              background-image: url("../images/resources/Bg-resource-copper.png");
-            }
-            &#HouseHasting-btn{
-              background-image: url("../images/resources/Bg-resource-tin.png");
-            }
-            &#HouseElariel-btn{
-              background-image: url("../images/resources/Bg-resource-coins.png");
-            }
-            
-            &:hover{
-              transform: scale(1.1, 1.1);
-              transition: 0.1s linear;
-            }          
-            
-            .building-cost{
-              display: flex;
-              flex-direction: row;
-              justify-content: space-around;
-              align-items: center;
-              gap: 10px;
-
-              li{
-                font-family: 'Courier New', Courier, monospace;
-                padding: 10px 0 0 0;
-                height: auto;
-              }
-
-              .missing {
-                filter: grayscale(100%);
-                opacity: 50%;
-              }
-            }
-          }
-        }
+    h2 {
+      /* opacity: 50%; */
+      color: white;
+      font-weight: 100;
     }
+
+    li {
+      color: white;
+      padding: 5px;
+      font-family: "Special elite";
+      font-weight: 100;
+      height: 30px;
+    }
+
+    #Resources-ul {
+      .resources-li {
+        padding: 3px 10px 0px 10px;
+        width: 120px;
+        font-size: 0.85em;
+        /* background-color: cadetblue; */
+
+        border: solid 2px rgba(50, 50, 50, 0.9);
+        background-size: cover;
+        border-radius: 25px;
+        display: flex;
+        gap: 5px;
+        justify-content: space-between;
+        align-items: center;
+
+        &#Steel-btn {
+          background-image: url("../images/resources/Bg-resource-steel.png");
+        }
+        &#Bronze-btn {
+          background-image: url("../images/resources/Bg-resource-bronze.png");
+        }
+        &#Copper-btn {
+          background-image: url("../images/resources/Bg-resource-copper.png");
+        }
+        &#Tin-btn {
+          background-image: url("../images/resources/Bg-resource-tin.png");
+        }
+        &#Coins-btn {
+          background-image: url("../images/resources/Bg-resource-coins.png");
+        }
+      }
+    }
+
+    #Buildings-ul {
+      .buildings-li {
+        /* padding: 5px; */
+        /* min-width: 80px; */
+        width: 100%;
+        height: 100%;
+        font-size: 1em;
+        text-align: center;
+        padding: 10px;
+        background-size: cover;
+        background-position: center left;
+        border-radius: 5px;
+        border: solid 2px rgba(50, 50, 50, 0.9);
+
+        &#HouseVenture-btn {
+          background-image: url("../images/resources/Bg-resource-steel.png");
+        }
+        &#HouseCett-btn {
+          background-image: url("../images/resources/Bg-resource-bronze.png");
+        }
+        &#HouseLekal-btn {
+          background-image: url("../images/resources/Bg-resource-copper.png");
+        }
+        &#HouseHasting-btn {
+          background-image: url("../images/resources/Bg-resource-tin.png");
+        }
+        &#HouseElariel-btn {
+          background-image: url("../images/resources/Bg-resource-coins.png");
+        }
+
+        &:hover {
+          transform: scale(1.1, 1.1);
+          transition: 0.1s linear;
+          cursor: pointer;
+        }
+
+        .building-cost {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          align-items: center;
+          gap: 10px;
+
+          li {
+            font-family: "Courier New", Courier, monospace;
+            padding: 10px 0 0 0;
+            height: auto;
+          }
+
+          .missing {
+            filter: grayscale(100%);
+            opacity: 50%;
+          }
+        }
+      }
+    }
+  }
+
+  #start-incursion-btn {
+    cursor: pointer;
+  }
 }
 
 #base-ui {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    justify-items: center;
-    align-items:flex-end;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+  align-items: flex-end;
 
-    .house-building {
-        background-size: contain;
-        background-position: center center;
-        background-repeat: no-repeat;
-        box-sizing: border-box;
-        height: 90%;
-        width: 90%;
-        text-align: center;
-        color: white;
-        font-family: "Special elite";
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-        gap: 75px;
+  .house-building {
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    height: 90%;
+    width: 90%;
+    text-align: center;
+    color: white;
+    font-family: "Special elite";
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 75px;
 
-        p {
-            margin: 0;
-            padding: 0;
-            font-weight: 600;
-            
-            img {
-              filter: drop-shadow(0 0 2px white)
-            }
-        }
+    p {
+      margin: 0;
+      padding: 0;
+      font-weight: 600;
+
+      img {
+        filter: drop-shadow(0 0 2px white);
+      }
     }
+  }
 }
